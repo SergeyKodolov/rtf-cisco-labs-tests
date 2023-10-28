@@ -1,0 +1,14 @@
+.all_node_active:
+  title: "Проверка включения"
+  description: "Все компоненты сети включены"
+  script:
+    - |
+      for nodeId in ${allNodeId[@]}; do
+        echo "[$nodeId] Проверка активности..."
+        running=$(nodeGet $nodeId session_running)
+        if [[ $running != 1 ]] ; then
+          echo "[$nodeId] Не запущен"; exit 1
+        fi
+        echo "[$nodeId] Запущен"
+      done
+      echo "Success"

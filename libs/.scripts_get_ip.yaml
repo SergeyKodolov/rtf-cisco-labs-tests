@@ -1,0 +1,44 @@
+include:
+  - '.execute_telnet.yaml'
+
+.scripts_get_ip:
+  # Принимает $1 - название ноды для исполнения ping, $2 - интерфейс для просмотра ip адреса
+  # Возвращает один параметр - ip адрес или пустая строка
+  linux:
+    - |
+      function getLinuxIp() {
+      local node=$1
+      local eth=${2-eth1}
+      local command="ifconfig $eth"
+    - !reference [ .execute_telnet ]
+    - |
+      local ip=$(echo "$buffer" | grep inet | awk '$1 == "inet" {print $2}')
+      echo "$ip"
+      }
+  router:
+    - |
+      function getRouterIp() {
+      local node=$1
+      local eth=${2-eth0/0}
+      local command="show ip interface brief $eth"
+    - !reference [ .execute_telnet ]
+    - |
+      local ip=$(echo "$buffer" | awk '/^Interface/ {getline; if ($2 ~ /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/) print $2}')
+      echo "$ip"
+      }
+  switch:
+    - |
+      function getSwitchIp() {
+      local node=$1
+      local vlan=${2-vlan1}
+      local command="sh ip int br $vlan"
+    - !reference [ .execute_telnet ]
+    - |
+      local ip=$(echo "$buffer" | awk '/^Interface/ {getline; if ($2 ~ /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/) print $2}')
+      echo "$ip"
+      }
+
+  all:
+    - !reference [ .scripts_get_ip linux ]
+    - !reference [ .scripts_get_ip router ]
+    - !reference [ .scripts_get_ip switch ]

@@ -1,0 +1,31 @@
+include:
+  - '.execute_telnet.yaml'
+
+.scripts_ping_ip:
+  # Принимает $1 - название ноды для исполнения ping, $2 - ip адрес назначения
+  # Возвращает 1 - если ping успешный, 0 - пинг не прошёл
+  linux:
+    - |
+      function pingLinuxIp() {
+      local node=$1
+      local destination=$2
+      local command="ping -c 5 -W 1 $destination | tail -n 2 | head -n 1"
+    - !reference [ .execute_telnet ]
+    - |
+      local find=$(echo "$buffer" | grep "5 received")
+      [ -z "$find" ] && echo "0" || echo "1"
+      }
+  iol:
+    - |
+      function pingIolIp() {
+      local node=$1
+      local destination=$2
+      local command="ping $destination"
+    - !reference [ .execute_telnet ]
+    - |
+      local find=$(echo "$buffer" | grep "rate is 100 percent")
+      [ -z "$find" ] && echo "0" || echo "1"
+      }
+  all:
+    - !reference [ .scripts_ping_ip linux ]
+    - !reference [ .scripts_ping_ip iol ]

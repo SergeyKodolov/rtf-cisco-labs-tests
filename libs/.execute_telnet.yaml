@@ -1,0 +1,13 @@
+.execute_telnet:
+  - |
+    SCRIPT=`cat <<_EOF_
+    #Время ожидание expect
+    set timeout ${TELNET_TIMEOUT-5}
+    #Соединение
+    spawn telnet $(nodeGet $node host) $(nodeGet $node port)
+    expect "'^]'."
+    #Выполняемые команды:
+    send "$command\r"
+    expect "#"
+    _EOF_`
+  - buffer=$(expect -c "$SCRIPT")
