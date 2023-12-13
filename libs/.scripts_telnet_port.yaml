@@ -1,0 +1,17 @@
+include:
+  - '.execute_telnet.yaml'
+
+.scripts_telnet_port:
+  # Принимает $1 - название ноды для исполнения ping, $2 - ip адрес назначения
+  # Возвращает 1 - если ping успешный, 0 - пинг не прошёл
+  linux:
+    - |
+      function telnetLinuxPort() {
+      local node=$1
+      local destination=$2
+      local command="wget -t 1 --spider --dns-timeout 3 --connect-timeout 10 $destination"
+    - !reference [ .execute_telnet ]
+    - |
+      local find=$(echo "$buffer" | grep "connected")
+      [ -z "$find" ] && echo "0" || echo "1"
+      }
