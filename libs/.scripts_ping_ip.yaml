@@ -26,6 +26,18 @@ include:
       local find=$(echo "$buffer" | grep "rate is 100 percent")
       [ -z "$find" ] && echo "0" || echo "1"
       }
+  vyos:
+    - |
+      function pingVyosIp() {
+      local node=$1
+      local destination=$2
+      local command="ping $destination count 5 quiet"
+    - !reference [ .execute_telnet ]
+    - |
+      local find=$(echo "$buffer" | grep "5 received")
+      [ -z "$find" ] && echo "0" || echo "1"
+      }
   all:
     - !reference [ .scripts_ping_ip linux ]
     - !reference [ .scripts_ping_ip iol ]
+    - !reference [ .scripts_ping_ip vyos ]
