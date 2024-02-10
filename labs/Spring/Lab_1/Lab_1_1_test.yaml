@@ -1,0 +1,86 @@
+include:
+  - '/opt/unetlab/libs/.all_node_active.yaml'
+  - '/opt/unetlab/libs/.scripts_get_ip.yaml'
+  - '/opt/unetlab/libs/.scripts_ping_ip.yaml'
+
+all_node_active:
+  extends: .all_node_active
+  id: 1
+  before_script:
+    - allNodeId=("PC-1" "PC-2" "IOS" "VyOS")
+
+node_have_ip:
+  id: 2
+  title: "Настройка адресов устройств"
+  description: "Интерфейсам должны быть назначены IP адреса"
+  before_script:
+    - !reference [ .scripts_get_ip all ]
+  script:
+    - echo "[PC-1] Подключение..."
+    - PC_1_ip=$(getLinuxIp PC-1 eth1)
+    - echo "[PC-1] Получен ip:$PC_1_ip"
+    - echo "[PC-2] Подключение..."
+    - PC_2_ip=$(getLinuxIp PC-2 eth1)
+    - echo "[PC-2] Получен ip:$PC_2_ip"
+    - echo "[IOS] Подключение..."
+    - IOS_ip0=$(getRouterIp IOS eth0/0)
+    - echo "[IOS] Получен ip0:$IOS_ip0"
+    - echo "[VyOS] Подключение..."
+    - VyOS_ip=$(getVyosIp VyOS eth0)
+    - echo "[VyOS] Получен ip:$VyOS_ip"
+    - |
+      # Проверка установки всех IP адресов
+      declare -A ipCheck=(
+        ["PC-1, eth0"]=$PC_1_ip
+        ["PC-2, eth0"]=$PC_2_ip
+        ["IOS, eth0/0"]=$IOS_ip0
+        ["VyOS eth0"]=$VyOS_ip
+      )
+      for key in "${!ipCheck[@]}"; do
+        value="${ipCheck[$key]}"
+        if [[ -z "$value" ]] ; then
+          echo "Ошибка установки ip адреса на $key"; exit 1
+        fi
+      done
+
+ping:
+  id: 3
+  title: "Проверка связности устройств"
+  description: "Все узлы должны пинговать друг друга"
+  before_script:
+    - !reference [ .scripts_get_ip all ]
+    - !reference [ .scripts_ping_ip all ]
+    - |
+      function checkPing(){
+        local title=$1
+        local command=$2
+        echo "$title Проверка видимости..."
+        [[ $($command) != 1 ]] && { echo "$title: ERROR"; exit 1; } || echo "$title: OK"
+      }
+  script:
+    - PC_1_ip=$(getLinuxIp PC-1 eth1)
+    - PC_2_ip=$(getLinuxIp PC-2 eth1)
+    - IOS_ip0=$(getRouterIp IOS eth0/0)
+    - VyOS_ip=$(getVyosIp VyOS eth0)
+    - |
+      # Проверка установки всех IP адресов
+      declare -A ipCheck=(
+        ["PC-1, eth0"]=$PC_1_ip
+        ["PC-2, eth0"]=$PC_2_ip
+        ["IOS, eth0/0"]=$IOS_ip0
+        ["VyOS eth0"]=$VyOS_ip
+      )
+      for key in "${!ipCheck[@]}"; do
+        value="${ipCheck[$key]}"
+        if [[ -z "$value" ]] ; then
+          echo "Ошибка установки ip адреса на $key"; exit 1
+        fi
+      done
+    - |
+      TELNET_TIMEOUT=7
+      checkPing "[PC-1]->[IOS:eth0/0]" "pingLinuxIp PC-1 $IOS_ip0"
+      checkPing "[IOS]->[PC-1]" "pingIolIp IOS $PC_1_ip"
+      checkPing "[PC-2]->[VyOS:eth0]" "pingLinuxIp PC-2 $VyOS_ip"
+      checkPing "[VyOS]->[PC-2]" "pingVyosIp VyOS $PC_2_ip"
+      echo "Success"
+      
