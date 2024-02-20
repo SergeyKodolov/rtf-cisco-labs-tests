@@ -26,15 +26,15 @@ node_have_ip:
     - IOS_ip0=$(getRouterIp IOS eth0/0)
     - echo "[IOS] Получен ip0:$IOS_ip0"
     - echo "[VyOS] Подключение..."
-    - VyOS_ip=$(getVyosIp VyOS eth0)
+    - VyOS_ip=$(getVyosIp VyOS eth1)
     - echo "[VyOS] Получен ip:$VyOS_ip"
     - |
       # Проверка установки всех IP адресов
       declare -A ipCheck=(
-        ["PC-1, eth0"]=$PC_1_ip
-        ["PC-2, eth0"]=$PC_2_ip
+        ["PC-1, eth1"]=$PC_1_ip
+        ["PC-2, eth1"]=$PC_2_ip
         ["IOS, eth0/0"]=$IOS_ip0
-        ["VyOS eth0"]=$VyOS_ip
+        ["VyOS eth1"]=$VyOS_ip
       )
       for key in "${!ipCheck[@]}"; do
         value="${ipCheck[$key]}"
@@ -61,14 +61,14 @@ ping:
     - PC_1_ip=$(getLinuxIp PC-1 eth1)
     - PC_2_ip=$(getLinuxIp PC-2 eth1)
     - IOS_ip0=$(getRouterIp IOS eth0/0)
-    - VyOS_ip=$(getVyosIp VyOS eth0)
+    - VyOS_ip=$(getVyosIp VyOS eth1)
     - |
       # Проверка установки всех IP адресов
       declare -A ipCheck=(
-        ["PC-1, eth0"]=$PC_1_ip
-        ["PC-2, eth0"]=$PC_2_ip
+        ["PC-1, eth1"]=$PC_1_ip
+        ["PC-2, eth1"]=$PC_2_ip
         ["IOS, eth0/0"]=$IOS_ip0
-        ["VyOS eth0"]=$VyOS_ip
+        ["VyOS eth1"]=$VyOS_ip
       )
       for key in "${!ipCheck[@]}"; do
         value="${ipCheck[$key]}"
@@ -80,7 +80,7 @@ ping:
       TELNET_TIMEOUT=7
       checkPing "[PC-1]->[IOS:eth0/0]" "pingLinuxIp PC-1 $IOS_ip0"
       checkPing "[IOS]->[PC-1]" "pingIolIp IOS $PC_1_ip"
-      checkPing "[PC-2]->[VyOS:eth0]" "pingLinuxIp PC-2 $VyOS_ip"
+      checkPing "[PC-2]->[VyOS:eth1]" "pingLinuxIp PC-2 $VyOS_ip"
       checkPing "[VyOS]->[PC-2]" "pingVyosIp VyOS $PC_2_ip"
       echo "Success"
       
