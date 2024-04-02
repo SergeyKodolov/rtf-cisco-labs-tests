@@ -1,39 +1,42 @@
 include:
-  - '/opt/unetlab/libs/.all_node_active.yaml'
   - '/opt/unetlab/libs/.scripts_get_ip.yaml'
   - '/opt/unetlab/libs/.scripts_ping_ip.yaml'
 
-all_node_active:
-  extends: .all_node_active
+ios_have_ip:
   id: 1
-  before_script:
-    - allNodeId=("PC-1" "PC-2" "IOS" "VyOS")
-
-node_have_ip:
-  id: 2
-  title: "Настройка адресов устройств"
-  description: "Интерфейсам должны быть назначены IP адреса"
+  title: "Настройка адресa Cisco IOS"
+  description: "Интерфейсу eth0/0 должен быть назначен IP адрес"
   before_script:
     - !reference [ .scripts_get_ip all ]
   script:
-    - echo "[PC-1] Подключение..."
-    - PC_1_ip=$(getLinuxIp PC-1 eth1)
-    - echo "[PC-1] Получен ip:$PC_1_ip"
-    - echo "[PC-2] Подключение..."
-    - PC_2_ip=$(getLinuxIp PC-2 eth1)
-    - echo "[PC-2] Получен ip:$PC_2_ip"
     - echo "[IOS] Подключение..."
     - IOS_ip0=$(getRouterIp IOS eth0/0)
     - echo "[IOS] Получен ip0:$IOS_ip0"
+    - |
+      # Проверка установки IP
+      declare -A ipCheck=(
+        ["IOS, eth0/0"]=$IOS_ip0
+      )
+      for key in "${!ipCheck[@]}"; do
+        value="${ipCheck[$key]}"
+        if [[ -z "$value" ]] ; then
+          echo "Ошибка установки ip адреса на $key"; exit 1
+        fi
+      done
+
+vyos_have_ip:
+  id: 2
+  title: "Настройка адресa VyOS"
+  description: "Интерфейсу eth1 должен быть назначен IP адрес"
+  before_script:
+    - !reference [ .scripts_get_ip all ]
+  script:
     - echo "[VyOS] Подключение..."
     - VyOS_ip=$(getVyosIp VyOS eth1)
     - echo "[VyOS] Получен ip:$VyOS_ip"
     - |
       # Проверка установки всех IP адресов
       declare -A ipCheck=(
-        ["PC-1, eth1"]=$PC_1_ip
-        ["PC-2, eth1"]=$PC_2_ip
-        ["IOS, eth0/0"]=$IOS_ip0
         ["VyOS eth1"]=$VyOS_ip
       )
       for key in "${!ipCheck[@]}"; do
@@ -43,8 +46,34 @@ node_have_ip:
         fi
       done
 
-ping:
+pc_have_ip:
   id: 3
+  title: "Настройка адресов PC"
+  description: "Интерфейсам PC должны быть назначены IP адреса"
+  before_script:
+    - !reference [ .scripts_get_ip all ]
+  script:
+    - echo "[PC-1] Подключение..."
+    - PC_1_ip=$(getLinuxIp PC-1 eth1)
+    - echo "[PC-1] Получен ip:$PC_1_ip"
+    - echo "[PC-2] Подключение..."
+    - PC_2_ip=$(getLinuxIp PC-2 eth1)
+    - echo "[PC-2] Получен ip:$PC_2_ip"
+    - |
+      # Проверка установки всех IP адресов
+      declare -A ipCheck=(
+        ["PC-1, eth1"]=$PC_1_ip
+        ["PC-2, eth1"]=$PC_2_ip
+      )
+      for key in "${!ipCheck[@]}"; do
+        value="${ipCheck[$key]}"
+        if [[ -z "$value" ]] ; then
+          echo "Ошибка установки ip адреса на $key"; exit 1
+        fi
+      done
+
+ping:
+  id: 4
   title: "Проверка связности устройств"
   description: "Все узлы должны пинговать друг друга"
   before_script:
