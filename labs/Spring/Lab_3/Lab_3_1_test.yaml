@@ -1,0 +1,87 @@
+include:
+  - '/opt/unetlab/libs/.scripts_get_ip.yaml'
+  - '/opt/unetlab/libs/.scripts_ping_ip.yaml'
+
+ping_gateway:
+  id: 1
+  title: "Проверка доступности шлюза по умолчанию"
+  description: "Узлы локальной сети должны пинговать свой шлюз"
+  before_script:
+    - !reference [ .scripts_get_ip all ]
+    - !reference [ .scripts_ping_ip all ]
+    - |
+      function checkPing(){
+        local title=$1
+        local command=$2
+        echo "$title Проверка видимости..."
+        [[ $($command) != 1 ]] && { echo "$title: ERROR"; exit 1; } || echo "$title: OK"
+      }
+  script:
+    - PC_A_ip=$(getLinuxIp PC-A eth1)
+    - PC_B_ip=$(getLinuxIp PC-B eth1)
+    - S1_ip0=$(getSwitchIp S1 vlan1)
+    - R1_ip0=$(getRouterIp R1 eth0/0)
+    - R1_ip1=$(getRouterIp R1 eth0/1)
+    - |
+      # Проверка установки всех IP адресов
+      declare -A ipCheck=(
+        ["PC-A, eth1"]=$PC_A_ip
+        ["PC-B, eth1"]=$PC_B_ip
+        ["R1, eth0/0"]=$R1_ip0
+        ["R1, eth0/1"]=$R1_ip1
+      )
+      for key in "${!ipCheck[@]}"; do
+        value="${ipCheck[$key]}"
+        if [[ -z "$value" ]] ; then
+          echo "Ошибка установки ip адреса на $key"; exit 1
+        fi
+      done
+    - |
+      TELNET_TIMEOUT=7
+      checkPing "[PC-A]->[R1:eth0/0]" "pingLinuxIp PC-A $R1_ip0"
+      checkPing "[S1]->[R1:eth0/0]" "pingIolIp S1 $R1_ip0"
+      checkPing "[PC-B]->[R1:eth0/1]" "pingLinuxIp PC-B $R1_ip1"
+      echo "Success"
+
+ping_neighbours:
+  id: 1
+  title: "Проверка доступности устройств в соседней сети"
+  description: "Узлы локальной сети должны устройства из соседней локальной сети за маршрутизатором"
+  before_script:
+    - !reference [ .scripts_get_ip all ]
+    - !reference [ .scripts_ping_ip all ]
+    - |
+      function checkPing(){
+        local title=$1
+        local command=$2
+        echo "$title Проверка видимости..."
+        [[ $($command) != 1 ]] && { echo "$title: ERROR"; exit 1; } || echo "$title: OK"
+      }
+  script:
+    - PC_A_ip=$(getLinuxIp PC-A eth1)
+    - PC_B_ip=$(getLinuxIp PC-B eth1)
+    - S1_ip0=$(getSwitchIp S1 vlan1)
+    - R1_ip0=$(getRouterIp R1 eth0/0)
+    - R1_ip1=$(getRouterIp R1 eth0/1)
+    - |
+      # Проверка установки всех IP адресов
+      declare -A ipCheck=(
+        ["PC-A, eth1"]=$PC_A_ip
+        ["PC-B, eth1"]=$PC_B_ip
+        ["R1, eth0/0"]=$R1_ip0
+        ["R1, eth0/1"]=$R1_ip1
+      )
+      for key in "${!ipCheck[@]}"; do
+        value="${ipCheck[$key]}"
+        if [[ -z "$value" ]] ; then
+          echo "Ошибка установки ip адреса на $key"; exit 1
+        fi
+      done
+    - |
+      TELNET_TIMEOUT=7
+      checkPing "[PC-A]->[PC-B]" "pingLinuxIp PC-A $PC_B_ip"
+      checkPing "[S1]->[PC-B]" "pingIolIp S1 $PC_B_ip"
+      checkPing "[PC-B]->[PC-A]" "pingLinuxIp PC-B $PC_A_ip"
+      checkPing "[PC-B]->[S1]" "pingLinuxIp PC-B $S1_ip0"
+      echo "Success"
+      
