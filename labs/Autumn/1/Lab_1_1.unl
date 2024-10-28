@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<lab name="Lab_1_1" id="59e31748-a850-4161-843f-996d8a3fada7" version="1" scripttimeout="300" password="a37e9082cbabcf9d1369dfae313c42ad" author="1" countdown="60" darkmode="" mode3d="" nogrid="" joinable="2" joinable_emails="" openable="1" openable_emails="" editable="2" editable_emails="" multi_config_active="">
+  <topology>
+    <nodes>
+      <node id="3" type="iol" template="iol" config="0" config_script="embedded" script_timeout="" config_data="CiEKdmVyc2lvbiAxNS40CnNlcnZpY2UgdGltZXN0YW1wcyBkZWJ1ZyBkYXRldGltZSBtc2VjCnNlcnZpY2UgdGltZXN0YW1wcyBsb2cgZGF0ZXRpbWUgbXNlYwpubyBzZXJ2aWNlIHBhc3N3b3JkLWVuY3J5cHRpb24KIQpob3N0bmFtZSBURVNUCiEKYm9vdC1zdGFydC1tYXJrZXIKYm9vdC1lbmQtbWFya2VyCiEKIQohCm5vIGFhYSBuZXctbW9kZWwKbW1pIHBvbGxpbmctaW50ZXJ2YWwgNjAKbm8gbW1pIGF1dG8tY29uZmlndXJlCm5vIG1taSBwdmMKbW1pIHNubXAtdGltZW91dCAxODAKbm8gaXAgaWNtcCByYXRlLWxpbWl0IHVucmVhY2hhYmxlCiEKIQohCiEKIQohCgoKIQohCiEKIQpubyBpcCBkb21haW4gbG9va3VwCmlwIGNlZgpubyBpcHY2IGNlZgohCm11bHRpbGluayBidW5kbGUtbmFtZSBhdXRoZW50aWNhdGVkCiEKIQohCiEKIQohCiEKIQohCnJlZHVuZGFuY3kKIQpubyBjZHAgbG9nIG1pc21hdGNoIGR1cGxleAohCmlwIHRjcCBzeW53YWl0LXRpbWUgNQohIAohCiEKIQohCiEKIQohCiEKIQohCiEKIQppbnRlcmZhY2UgRXRoZXJuZXQwLzAKIG5vIHNodXRkb3duCiBubyBpcCBhZGRyZXNzCiEKaW50ZXJmYWNlIEV0aGVybmV0MC8xCiBubyBzaHV0ZG93bgogbm8gaXAgYWRkcmVzcwohCmludGVyZmFjZSBFdGhlcm5ldDAvMgogbm8gc2h1dGRvd24KIG5vIGlwIGFkZHJlc3MKIQppbnRlcmZhY2UgRXRoZXJuZXQwLzMKIG5vIHNodXRkb3duCiBubyBpcCBhZGRyZXNzCiEKaXAgZm9yd2FyZC1wcm90b2NvbCBuZAohCiEKbm8gaXAgaHR0cCBzZXJ2ZXIKbm8gaXAgaHR0cCBzZWN1cmUtc2VydmVyCiEKIQohCiEKY29udHJvbC1wbGFuZQohCiEKIQohCiEKIQohCiEKbGluZSBjb24gMAogZXhlYy10aW1lb3V0IDAgMAogcHJpdmlsZWdlIGxldmVsIDE1CiBsb2dnaW5nIHN5bmNocm9ub3VzCmxpbmUgYXV4IDAKIGV4ZWMtdGltZW91dCAwIDAKIHByaXZpbGVnZSBsZXZlbCAxNQogbG9nZ2luZyBzeW5jaHJvbm91cwpsaW5lIHZ0eSAwIDQKIGxvZ2luCiB0cmFuc3BvcnQgaW5wdXQgbm9uZQohCiEKZW5kCg==" multi_config="W10=" delay="0" icon="Router.png" image="i86bi_linux-adventerprisek9-ms.154-1.T_AntiGNS3.bin" left="441" name="R1" top="93" size="0" console="" ethernet="1" nvram="1024" ram="1024" serial="0" idlepc="0x0" cpu="0" cpulimit="1" iol_options="" keepalive="0">
+        <interface id="0" name="e0/0" type="ethernet" network_id="2" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="16" name="e0/1" type="ethernet" network_id="5" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="4" type="iol" template="i86bi_linux" config="0" config_script="embedded" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Switch.png" image="i86bi_linux_l2-ipbasek9-ms.may8-2013-team_track.bin" left="432" name="S1" top="252" size="0" console="" ethernet="1" nvram="1024" ram="1024" serial="0" idlepc="0x0" cpu="0" cpulimit="1" iol_options="" keepalive="1">
+        <interface id="0" name="e0/0" type="ethernet" network_id="1" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="16" name="e0/1" type="ethernet" network_id="2" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="5" type="iol" template="iol" config="0" config_script="embedded" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Switch.png" image="i86bi_linux_l2-ipbasek9-ms.may8-2013-team_track.bin" left="651" name="S2" top="249" size="0" console="" ethernet="1" nvram="1024" ram="1024" serial="0" idlepc="0x0" cpu="0" cpulimit="1" iol_options="" keepalive="1">
+        <interface id="0" name="e0/0" type="ethernet" network_id="3" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="16" name="e0/1" type="ethernet" network_id="4" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="6" type="iol" template="iol" config="0" config_script="embedded" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Router.png" image="i86bi_linux-adventerprisek9-ms.154-1.T_AntiGNS3.bin" left="657" name="R2" top="93" size="0" console="" ethernet="1" nvram="1024" ram="1024" serial="0" idlepc="0x0" cpu="0" cpulimit="1" iol_options="" keepalive="1">
+        <interface id="0" name="e0/0" type="ethernet" network_id="4" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="16" name="e0/1" type="ethernet" network_id="5" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="1" type="docker" template="docker" config="0" config_script="config_docker.py" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Desktop.png" image="pnetlab/ubuntu_sv:latest" left="441" name="vPC1" top="390" size="0" console="telnet" ethernet="2" nvram="0" ram="256" serial="0" idlepc="0x0" cpu="1" cpulimit="1" docker_options="--privileged" username="" password="" console_2nd="rdp" map_port="" map_port_2nd="" eth1_dhcp="0" eth1_ip="">
+        <interface id="1" name="eth1" type="ethernet" network_id="1" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="2" type="docker" template="docker" config="0" config_script="config_docker.py" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Desktop.png" image="pnetlab/ubuntu_sv:latest" left="660" name="vPC2" top="390" size="0" console="telnet" ethernet="2" nvram="0" ram="256" serial="0" idlepc="0x0" cpu="1" cpulimit="1" docker_options="--privileged" username="" password="" console_2nd="rdp" map_port="" map_port_2nd="" eth1_dhcp="0" eth1_ip="">
+        <interface id="1" name="eth1" type="ethernet" network_id="3" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+    </nodes>
+    <networks>
+      <network id="2" type="bridge" name="S1iface_16" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="4" type="bridge" name="S2iface_16" left="0" top="0" visibility="0" icon="cloud.png" size=""/>
+      <network id="5" type="bridge" name="R1iface_16" left="0" top="0" visibility="0" icon="cloud.png" size=""/>
+      <network id="1" type="bridge" name="vPC1iface_1" left="0" top="0" visibility="0" icon="cloud.png" size=""/>
+      <network id="3" type="bridge" name="vPC2iface_1" left="0" top="0" visibility="0" icon="cloud.png" size=""/>
+    </networks>
+  </topology>
+  <workbooks/>
+</lab>

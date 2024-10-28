@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<lab name="NAT" id="8cab8482-8add-47ca-b764-de1b150e3330" version="1" scripttimeout="300" password="a37e9082cbabcf9d1369dfae313c42ad" author="2" countdown="60" darkmode="" mode3d="" nogrid="" joinable="0" joinable_emails="2" openable="1" openable_emails="2" editable="0" editable_emails="2" multi_config_active="">
+  <topology>
+    <nodes>
+      <node id="2" type="iol" template="iol" config="0" config_script="embedded" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Switch.png" image="i86bi_linux_l2-ipbasek9-ms.may8-2013-team_track.bin" left="300" name="S1" top="246" size="0" console="" ethernet="1" nvram="1024" ram="1024" serial="0" idlepc="0x0" cpu="0" cpulimit="1" iol_options="" keepalive="0">
+        <interface id="0" name="e0/0" type="ethernet" network_id="2" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="16" name="e0/1" type="ethernet" network_id="3" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="32" name="e0/2" type="ethernet" network_id="4" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="3" type="docker" template="docker" config="0" config_script="config_docker.py" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Server.png" image="pnetlab/ubuntu_sv:latest" left="312" name="WEB" top="357" size="0" console="telnet" ethernet="2" nvram="0" ram="256" serial="0" idlepc="0x0" cpu="1" cpulimit="1" docker_options="--privileged" username="" password="" console_2nd="" map_port="" map_port_2nd="" eth1_dhcp="0" eth1_ip="">
+        <interface id="1" name="eth1" type="ethernet" network_id="4" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="4" type="docker" template="docker" config="0" config_script="config_docker.py" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Desktop.png" image="pnetlab/linux-desktop:latest" left="144" name="PC1" top="240" size="0" console="telnet" ethernet="2" nvram="1024" ram="256" serial="0" idlepc="0x0" cpu="1" cpulimit="1" docker_options="--privileged" username="" password="" console_2nd="rdp" map_port="" map_port_2nd="" eth1_dhcp="0" eth1_ip="">
+        <interface id="1" name="eth1" type="ethernet" network_id="3" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="8" type="iol" template="iol" config="1" config_script="embedded" script_timeout="" config_data="IQohIExhc3QgY29uZmlndXJhdGlvbiBjaGFuZ2UgYXQgMDU6MTA6MjYgVVRDIEZyaSBEZWMgMyAyMDIxCiEKdmVyc2lvbiAxNS42CnNlcnZpY2UgdGltZXN0YW1wcyBkZWJ1ZyBkYXRldGltZSBtc2VjCnNlcnZpY2UgdGltZXN0YW1wcyBsb2cgZGF0ZXRpbWUgbXNlYwpubyBzZXJ2aWNlIHBhc3N3b3JkLWVuY3J5cHRpb24KIQpob3N0bmFtZSBSMQohCmJvb3Qtc3RhcnQtbWFya2VyCmJvb3QtZW5kLW1hcmtlcgohCiEKIQpubyBhYWEgbmV3LW1vZGVsCiEKIQohCm1taSBwb2xsaW5nLWludGVydmFsIDYwCm5vIG1taSBhdXRvLWNvbmZpZ3VyZQpubyBtbWkgcHZjCm1taSBzbm1wLXRpbWVvdXQgMTgwCiEKIQohCiEKIQohCiEKIQohCiEKIQohCiEKIQohCiEKIQohCiEKaXAgY2VmCm5vIGlwdjYgY2VmCiEKbXVsdGlsaW5rIGJ1bmRsZS1uYW1lIGF1dGhlbnRpY2F0ZWQKIQohCiEKIQohCiEKIQohCiEKIQpyZWR1bmRhbmN5CiEKIQohIAohCiEKIQohCiEKIQohCiEKIQohCiEKaW50ZXJmYWNlIEV0aGVybmV0MC8wCiBubyBzaHV0ZG93bgogbm8gaXAgYWRkcmVzcwogc2h1dGRvd24KIQppbnRlcmZhY2UgRXRoZXJuZXQwLzEKIG1hYy1hZGRyZXNzIEFBQkIuQ0MwMC4wNDEwCiBubyBzaHV0ZG93bgogbm8gaXAgYWRkcmVzcwogc2h1dGRvd24KIQppbnRlcmZhY2UgRXRoZXJuZXQwLzIKIG5vIHNodXRkb3duCiBubyBpcCBhZGRyZXNzCiBzaHV0ZG93bgohCmludGVyZmFjZSBFdGhlcm5ldDAvMwogbm8gc2h1dGRvd24KIG5vIGlwIGFkZHJlc3MKIHNodXRkb3duCiEKaXAgZm9yd2FyZC1wcm90b2NvbCBuZAohCiEKbm8gaXAgaHR0cCBzZXJ2ZXIKbm8gaXAgaHR0cCBzZWN1cmUtc2VydmVyCmlwIHNzaCBzZXJ2ZXIgYWxnb3JpdGhtIGVuY3J5cHRpb24gYWVzMTI4LWN0ciBhZXMxOTItY3RyIGFlczI1Ni1jdHIKaXAgc3NoIGNsaWVudCBhbGdvcml0aG0gZW5jcnlwdGlvbiBhZXMxMjgtY3RyIGFlczE5Mi1jdHIgYWVzMjU2LWN0cgohCmlwdjYgaW9hbSB0aW1lc3RhbXAKIQohCiEKY29udHJvbC1wbGFuZQohCiEKIQohCiEKIQohCiEKbGluZSBjb24gMAogbG9nZ2luZyBzeW5jaHJvbm91cwpsaW5lIGF1eCAwCmxpbmUgdnR5IDAgNAogbG9naW4KIHRyYW5zcG9ydCBpbnB1dCBub25lCiEKIQplbmQ=" multi_config="W10=" delay="0" icon="Router.png" image="i86bi_linux-adventerprisek9-ms.156-3.M3a.bin" left="462" name="R1" top="243" size="0" console="" ethernet="1" nvram="1024" ram="1024" serial="0" idlepc="0x0" cpu="0" cpulimit="1" iol_options="" keepalive="0">
+        <interface id="0" name="e0/0" type="ethernet" network_id="2" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="16" name="e0/1" type="ethernet" network_id="1" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+    </nodes>
+    <networks>
+      <network id="3" type="bridge" name="PC1iface_1" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="4" type="bridge" name="S1iface_32" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="2" type="bridge" name="S1iface_0" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="1" type="pnet0" name="Net" left="609" top="243" visibility="1" icon="cloud.png" size=""/>
+    </networks>
+  </topology>
+  <objects>
+    <textobjects>
+      <textobject id="1" name="txt 1" type="text">
+        <data>JTNDZGl2JTIwaWQlM0QlMjJjdXN0b21UZXh0MSUyMiUyMGNsYXNzJTNEJTIyY3VzdG9tU2hhcGUlMjBjdXN0b21UZXh0JTIwY29udGV4dC1tZW51JTIwY2stY29udGVudCUyMGp0ay1kcmFnZ2FibGUlMjBkcmFnc3RvcHBlZCUyMiUyMGRhdGEtcGF0aCUzRCUyMjElMjIlMjBzdHlsZSUzRCUyMnBvc2l0aW9uJTNBJTIwYWJzb2x1dGUlM0IlMjBkaXNwbGF5JTNBJTIwYmxvY2slM0IlMjB0b3AlM0ElMjA0ODZweCUzQiUyMGxlZnQlM0ElMjAyMjhweCUzQiUyMHdpZHRoJTNBJTIwMzAwcHglM0IlMjBoZWlnaHQlM0ElMjAxMDBweCUzQiUyMGN1cnNvciUzQSUyMG1vdmUlM0IlMjB6LWluZGV4JTNBJTIwMTAwMSUzQiUyMiUzRSUzQ3AlMjBwb3NpdGlvbmFibGUlM0QlMjJ0cnVlJTIyJTNFJTNDYSUyMGhyZWYlM0QlMjJodHRwcyUzQSUyRiUyRmRvY3MuZ29vZ2xlLmNvbSUyRmRvY3VtZW50JTJGZCUyRjFKVFg5VHp3eS0yemtJLW5IZFE3SFo5YkoxZUR2VVFJOV95NWQ5UktwMFV3JTJGZWRpdCUzRnVzcCUzRHNoYXJpbmclMjIlMjB0YXJnZXQlM0QlMjJfYmxhbmslMjIlMjByZWwlM0QlMjJub29wZW5lciUyMG5vcmVmZXJyZXIlMjIlM0UlRDAlQTElRDAlQTElRDAlQUIlRDAlOUIlRDAlOUElRDAlOTAlMjAlRDAlOUQlRDAlOTAlMjAlRDAlOUMlRDAlOTUlRDAlQTIlRDAlOUUlRDAlOTQlRDAlOTglRDAlQTclRDAlOTUlRDAlQTElRDAlOUElRDAlOTglRDAlOTUlMjAlRDAlQTMlRDAlOUElRDAlOTAlRDAlOTclRDAlOTAlRDAlOUQlRDAlOTglRDAlQUYlM0MlMkZhJTNFJTNDJTJGcCUzRSUzQyUyRmRpdiUzRQ==</data>
+      </textobject>
+    </textobjects>
+  </objects>
+</lab>

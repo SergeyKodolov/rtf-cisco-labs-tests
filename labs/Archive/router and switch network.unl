@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<lab name="router and switch network" id="d2bc0f64-1457-4ed2-93b8-fa0a165ad34d" version="1" scripttimeout="300" password="" author="1" countdown="60" darkmode="" mode3d="" nogrid="" joinable="0" joinable_emails="1" openable="0" openable_emails="1" editable="0" editable_emails="1" multi_config_active="">
+  <topology>
+    <nodes>
+      <node id="1" type="iol" template="iol" config="0" config_script="embedded" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Router.png" image="i86bi_linux-adventerprisek9-ms.154-1.T_AntiGNS3.bin" left="615" name="Router" top="117" size="0" console="" ethernet="1" nvram="1024" ram="1024" serial="0" idlepc="0x0" cpu="0" cpulimit="1" iol_options="" keepalive="0">
+        <interface id="0" name="e0/0" type="ethernet" network_id="2" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="16" name="e0/1" type="ethernet" network_id="3" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="2" type="iol" template="i86bi_linux" config="0" config_script="embedded" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Switch.png" image="i86bi_linux_l2-ipbasek9-ms.may8-2013-team_track.bin" left="417" name="Switch" top="120" size="0" console="" ethernet="1" nvram="1024" ram="1024" serial="0" idlepc="0x0" cpu="0" cpulimit="1" iol_options="" keepalive="0">
+        <interface id="0" name="e0/0" type="ethernet" network_id="1" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="16" name="e0/1" type="ethernet" network_id="2" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="3" type="docker" template="docker" config="0" config_script="config_docker.py" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Desktop.png" image="ptthanh1511/ansible:latest" left="258" name="PC1" top="111" size="0" console="telnet" ethernet="2" nvram="1024" ram="256" serial="0" idlepc="0x0" cpu="1" cpulimit="1" docker_options="--privileged" username="" password="" console_2nd="" map_port="" map_port_2nd="" eth1_dhcp="0" eth1_ip="">
+        <interface id="1" name="eth1" type="ethernet" network_id="1" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="4" type="docker" template="docker" config="0" config_script="config_docker.py" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Desktop.png" image="ptthanh1511/ansible:latest" left="792" name="PC2" top="111" size="0" console="telnet" ethernet="2" nvram="1024" ram="256" serial="0" idlepc="0x0" cpu="1" cpulimit="1" docker_options="--privileged" username="" password="" console_2nd="" map_port="" map_port_2nd="" eth1_dhcp="0" eth1_ip="">
+        <interface id="1" name="eth1" type="ethernet" network_id="3" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+    </nodes>
+    <networks>
+      <network id="1" type="bridge" name="PC1iface_1" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="2" type="bridge" name="Switchiface_16" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="3" type="bridge" name="Routeriface_16" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+    </networks>
+  </topology>
+</lab>

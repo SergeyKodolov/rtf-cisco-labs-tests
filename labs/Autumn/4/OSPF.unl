@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<lab name="OSPF" id="fcd60b86-72b8-4022-9696-3291fba303f4" version="1" scripttimeout="300" password="a37e9082cbabcf9d1369dfae313c42ad" author="4" countdown="60" darkmode="" mode3d="" nogrid="1" joinable="0" joinable_emails="" openable="1" openable_emails="" editable="0" editable_emails="" multi_config_active="">
+  <topology>
+    <nodes>
+      <node id="1" type="iol" template="iol" config="0" config_script="embedded" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Router.png" image="i86bi_linux-adventerprisek9-ms.154-1.T_AntiGNS3.bin" left="327" name="R1" top="465" size="0" console="" ethernet="1" nvram="1024" ram="1024" serial="0" idlepc="0x0" cpu="0" cpulimit="1" iol_options="" keepalive="0">
+        <interface id="0" name="e0/0" type="ethernet" network_id="1" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="16" name="e0/1" type="ethernet" network_id="3" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="32" name="e0/2" type="ethernet" network_id="5" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="2" type="iol" template="iol" config="0" config_script="embedded" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Router.png" image="i86bi_linux-adventerprisek9-ms.154-1.T_AntiGNS3.bin" left="471" name="R2" top="297" size="0" console="" ethernet="1" nvram="1024" ram="1024" serial="0" idlepc="0x0" cpu="0" cpulimit="1" iol_options="" keepalive="0">
+        <interface id="0" name="e0/0" type="ethernet" network_id="1" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="16" name="e0/1" type="ethernet" network_id="2" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="32" name="e0/2" type="ethernet" network_id="6" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="3" type="iol" template="iol" config="0" config_script="embedded" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Router.png" image="i86bi_linux-adventerprisek9-ms.154-1.T_AntiGNS3.bin" left="612" name="R3" top="465" size="0" console="" ethernet="1" nvram="1024" ram="1024" serial="0" idlepc="0x0" cpu="0" cpulimit="1" iol_options="" keepalive="0">
+        <interface id="0" name="e0/0" type="ethernet" network_id="2" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="16" name="e0/1" type="ethernet" network_id="3" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="32" name="e0/2" type="ethernet" network_id="4" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="4" type="docker" template="docker" config="0" config_script="config_docker.py" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Desktop.png" image="pnetlab/ubuntu_sv:latest" left="165" name="PC1" top="459" size="0" console="telnet" ethernet="2" nvram="1024" ram="256" serial="0" idlepc="0x0" cpu="1" cpulimit="1" docker_options="--privileged" username="" password="" console_2nd="" map_port="" map_port_2nd="" eth1_dhcp="0" eth1_ip="" eth2_dhcp="0" eth2_ip="" eth3_dhcp="0" eth3_ip="" default_route="" DNS="">
+        <interface id="1" name="eth1" type="ethernet" network_id="5" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="5" type="docker" template="docker" config="0" config_script="config_docker.py" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Desktop.png" image="pnetlab/ubuntu_sv:latest" left="471" name="PC2" top="162" size="0" console="telnet" ethernet="2" nvram="1024" ram="256" serial="0" idlepc="0x0" cpu="1" cpulimit="1" docker_options="--privileged" username="" password="" console_2nd="" map_port="" map_port_2nd="" eth1_dhcp="0" eth1_ip="" eth2_dhcp="0" eth2_ip="" eth3_dhcp="0" eth3_ip="" default_route="" DNS="">
+        <interface id="1" name="eth1" type="ethernet" network_id="6" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="6" type="docker" template="docker" config="0" config_script="config_docker.py" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Desktop.png" image="pnetlab/ubuntu_sv:latest" left="765" name="PC3" top="459" size="0" console="telnet" ethernet="2" nvram="1024" ram="256" serial="0" idlepc="0x0" cpu="1" cpulimit="1" docker_options="--privileged" username="" password="" console_2nd="" map_port="" map_port_2nd="" eth1_dhcp="0" eth1_ip="" eth2_dhcp="0" eth2_ip="" eth3_dhcp="0" eth3_ip="" default_route="" DNS="">
+        <interface id="1" name="eth1" type="ethernet" network_id="4" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+    </nodes>
+    <networks>
+      <network id="1" type="bridge" name="R1iface_0" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="2" type="bridge" name="R2iface_16" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="3" type="bridge" name="R1iface_16" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="4" type="bridge" name="PC6iface_1" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="5" type="bridge" name="PC4iface_1" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="6" type="bridge" name="PC5iface_1" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+    </networks>
+  </topology>
+  <objects>
+    <textobjects>
+      <textobject id="1" name="txt 1" type="text">
+        <data>JTNDZGl2JTIwaWQlM0QlMjJjdXN0b21UZXh0MSUyMiUyMGNsYXNzJTNEJTIyY3VzdG9tU2hhcGUlMjBjdXN0b21UZXh0JTIwY29udGV4dC1tZW51JTIwY2stY29udGVudCUyMGp0ay1kcmFnZ2FibGUlMjBkcmFnc3RvcHBlZCUyMiUyMGRhdGEtcGF0aCUzRCUyMjElMjIlMjBzdHlsZSUzRCUyMnBvc2l0aW9uJTNBJTIwYWJzb2x1dGUlM0IlMjBkaXNwbGF5JTNBJTIwYmxvY2slM0IlMjB0b3AlM0ElMjA1NThweCUzQiUyMGxlZnQlM0ElMjAzNjlweCUzQiUyMHdpZHRoJTNBJTIwMzAwcHglM0IlMjBoZWlnaHQlM0ElMjAxMDBweCUzQiUyMGN1cnNvciUzQSUyMG1vdmUlM0IlMjB6LWluZGV4JTNBJTIwMTAwMSUzQiUyMiUzRSUzQ3AlMjBwb3NpdGlvbmFibGUlM0QlMjJ0cnVlJTIyJTNFJTNDYSUyMGhyZWYlM0QlMjJodHRwcyUzQSUyRiUyRmRvY3MuZ29vZ2xlLmNvbSUyRmRvY3VtZW50JTJGZCUyRjF2Q3U1c2hLSFdNSkNEcUNwSWNpQU1GVTRmWUpJZ0ZUdlYtamZfSXdpazFjJTJGZWRpdCUzRnVzcCUzRHNoYXJpbmclMjIlMjB0YXJnZXQlM0QlMjJfYmxhbmslMjIlMjByZWwlM0QlMjJub29wZW5lciUyMG5vcmVmZXJyZXIlMjIlM0UlRDAlQTElRDAlQTElRDAlQUIlRDAlOUIlRDAlOUElRDAlOTAlMjAlRDAlOUQlRDAlOTAlMjAlRDAlOUMlRDAlOTUlRDAlQTIlRDAlOUUlRDAlOTQlRDAlOTglRDAlQTclRDAlOTUlRDAlQTElRDAlOUElRDAlOTglRDAlOTUlMjAlRDAlQTMlRDAlOUElRDAlOTAlRDAlOTclRDAlOTAlRDAlOUQlRDAlOTglRDAlQUYlM0MlMkZhJTNFJTNDJTJGcCUzRSUzQyUyRmRpdiUzRQ==</data>
+      </textobject>
+    </textobjects>
+  </objects>
+</lab>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<lab name="opensource" id="498a10d6-0c51-440e-bc2d-92f6b807031e" version="1" scripttimeout="300" password="" author="2" countdown="60" darkmode="" mode3d="" nogrid="" joinable="2" joinable_emails="2" openable="2" openable_emails="2" editable="2" editable_emails="2" multi_config_active="">
+  <topology>
+    <nodes>
+      <node id="1" type="qemu" template="vyos" config="0" config_script="config_vyos.py" script_timeout="1200" config_data="" multi_config="W10=" delay="0" icon="Router.png" image="vyos-1.4.0" left="672" name="VyOS" top="120" size="0" console="telnet" ethernet="4" nvram="0" ram="512" serial="0" idlepc="0x0" cpu="1" cpulimit="1" uuid="4467a61d-3979-4f7d-b21f-d5f75fa6fd55" firstmac="" first_nic="" qemu_options="-machine type=pc,accel=kvm -serial mon:stdio -nographic -no-user-config -nodefaults -rtc base=utc" qemu_version="2.12.0" qemu_arch="x86_64" qemu_nic="virtio-net-pci" username="" password="" eth_format="" console_2nd="" map_port="" map_port_2nd="">
+        <interface id="0" name="eth0" type="ethernet" network_id="1" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="2" name="eth2" type="ethernet" network_id="7" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="3" type="qemu" template="linux" config="0" config_script="" script_timeout="1200" config_data="" multi_config="W10=" delay="0" icon="Router.png" image="linux-openwrt" left="897" name="openwrt" top="123" size="0" console="telnet" ethernet="1" nvram="1024" ram="256" serial="0" idlepc="0x0" cpu="1" cpulimit="1" uuid="1f553c04-7340-4fba-b153-853b45243488" firstmac="" first_nic="" qemu_options="-machine type=pc,accel=kvm -vga virtio -usbdevice tablet -boot order=cd" qemu_version="2.12.0" qemu_arch="x86_64" qemu_nic="virtio-net-pci" username="" password="" eth_format="" console_2nd="" map_port="" map_port_2nd=""/>
+      <node id="4" type="qemu" template="mikrotik" config="0" config_script="config_mikrotik.py" script_timeout="1200" config_data="" multi_config="W10=" delay="0" icon="Router.png" image="mikrotik-7.13.2" left="435" name="Mikrotik" top="120" size="0" console="telnet" ethernet="4" nvram="0" ram="256" serial="0" idlepc="0x0" cpu="1" cpulimit="1" uuid="a783f49b-1186-4b7c-8bf2-a867ba55cbbd" firstmac="" first_nic="" qemu_options="-machine type=pc,accel=kvm -serial mon:stdio -nographic -no-user-config -nodefaults -display none -vga std -rtc base=utc" qemu_version="2.12.0" qemu_arch="x86_64" qemu_nic="e1000" username="" password="" eth_format="" console_2nd="" map_port="" map_port_2nd="">
+        <interface id="0" name="eth1" type="ethernet" network_id="2" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="1" name="eth2" type="ethernet" network_id="7" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="2" type="qemu" template="vyos" config="0" config_script="config_vyos.py" script_timeout="1200" config_data="" multi_config="W10=" delay="0" icon="Switch.png" image="vyos-1.4.0" left="657" name="VyOS Switch" top="267" size="0" console="telnet" ethernet="4" nvram="0" ram="512" serial="0" idlepc="0x0" cpu="1" cpulimit="1" uuid="9ca72021-f325-4a60-beec-0ab91b1503e0" firstmac="" first_nic="" qemu_options="-machine type=pc,accel=kvm -serial mon:stdio -nographic -no-user-config -nodefaults -rtc base=utc" qemu_version="2.12.0" qemu_arch="x86_64" qemu_nic="virtio-net-pci" username="" password="" eth_format="" console_2nd="" map_port="" map_port_2nd="">
+        <interface id="0" name="eth0" type="ethernet" network_id="1" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="1" name="eth1" type="ethernet" network_id="4" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="2" name="eth2" type="ethernet" network_id="3" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="5" type="qemu" template="mikrotik" config="0" config_script="config_mikrotik.py" script_timeout="1200" config_data="" multi_config="W10=" delay="0" icon="Switch.png" image="mikrotik-7.13.2" left="414" name="Mikrotik Switch" top="267" size="0" console="telnet" ethernet="4" nvram="0" ram="256" serial="0" idlepc="0x0" cpu="1" cpulimit="1" uuid="1f8d3aaf-cc1d-4a09-a6b1-650562266d6d" firstmac="" first_nic="" qemu_options="-machine type=pc,accel=kvm -serial mon:stdio -nographic -no-user-config -nodefaults -display none -vga std -rtc base=utc" qemu_version="2.12.0" qemu_arch="x86_64" qemu_nic="e1000" username="" password="" eth_format="" console_2nd="" map_port="" map_port_2nd="">
+        <interface id="0" name="eth1" type="ethernet" network_id="2" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="1" name="eth2" type="ethernet" network_id="6" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="2" name="eth3" type="ethernet" network_id="5" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="6" type="docker" template="docker" config="0" config_script="config_docker.py" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Desktop.png" image="pnetlab/ubuntu_sv:latest" left="360" name="PC6" top="435" size="0" console="telnet" ethernet="2" nvram="0" ram="256" serial="0" idlepc="0x0" cpu="1" cpulimit="1" docker_options="--privileged" username="" password="" console_2nd="" map_port="" map_port_2nd="" eth1_dhcp="0" eth1_ip="">
+        <interface id="1" name="eth1" type="ethernet" network_id="6" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="7" type="docker" template="docker" config="0" config_script="config_docker.py" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Desktop.png" image="pnetlab/ubuntu_sv:latest" left="480" name="PC7" top="435" size="0" console="telnet" ethernet="2" nvram="0" ram="256" serial="0" idlepc="0x0" cpu="1" cpulimit="1" docker_options="--privileged" username="" password="" console_2nd="" map_port="" map_port_2nd="" eth1_dhcp="0" eth1_ip="">
+        <interface id="1" name="eth1" type="ethernet" network_id="5" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="8" type="docker" template="docker" config="0" config_script="config_docker.py" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Desktop.png" image="pnetlab/ubuntu_sv:latest" left="609" name="PC8" top="432" size="0" console="telnet" ethernet="2" nvram="0" ram="256" serial="0" idlepc="0x0" cpu="1" cpulimit="1" docker_options="--privileged" username="" password="" console_2nd="" map_port="" map_port_2nd="" eth1_dhcp="0" eth1_ip="">
+        <interface id="1" name="eth1" type="ethernet" network_id="4" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="9" type="docker" template="docker" config="0" config_script="config_docker.py" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Desktop.png" image="pnetlab/ubuntu_sv:latest" left="726" name="PC9" top="432" size="0" console="telnet" ethernet="2" nvram="0" ram="256" serial="0" idlepc="0x0" cpu="1" cpulimit="1" docker_options="--privileged" username="" password="" console_2nd="" map_port="" map_port_2nd="" eth1_dhcp="0" eth1_ip="">
+        <interface id="1" name="eth1" type="ethernet" network_id="3" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+    </nodes>
+    <networks>
+      <network id="1" type="bridge" name="VyOS Switchiface_0" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="2" type="bridge" name="Mikrotik Switchiface_0" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="3" type="bridge" name="PC9iface_1" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="4" type="bridge" name="PC8iface_1" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="5" type="bridge" name="PC7iface_1" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="6" type="bridge" name="PC6iface_1" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="7" type="bridge" name="Mikrotikiface_1" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+    </networks>
+  </topology>
+</lab>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<lab name="Lab_6" id="5af951dc-737f-4e4c-86ed-84503b39b148" version="1" scripttimeout="300" password="a37e9082cbabcf9d1369dfae313c42ad" author="4" countdown="60" darkmode="" mode3d="" nogrid="" joinable="2" joinable_emails="" openable="1" openable_emails="" editable="2" editable_emails="" multi_config_active="">
+  <topology>
+    <nodes>
+      <node id="1" type="docker" template="docker" config="0" config_script="config_docker.py" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Desktop.png" image="pnetlab/linux-desktop:latest" left="417" name="PC" top="213" size="0" console="rdp" ethernet="2" nvram="1024" ram="256" serial="0" idlepc="0x0" cpu="1" cpulimit="1" docker_options="--privileged" username="" password="" console_2nd="" map_port="" map_port_2nd="" eth1_dhcp="1" eth1_ip="" eth2_dhcp="0" eth2_ip="" eth3_dhcp="0" eth3_ip="" default_route="" DNS="">
+        <interface id="1" name="eth1" type="ethernet" network_id="1" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+    </nodes>
+    <networks>
+      <network id="1" type="pnet_nat" name="Net" left="630" top="219" visibility="1" icon="cloud.png" size=""/>
+    </networks>
+  </topology>
+</lab>

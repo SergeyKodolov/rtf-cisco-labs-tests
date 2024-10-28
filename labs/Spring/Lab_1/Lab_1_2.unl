@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<lab name="Lab_1_2" id="ade47ef2-fb3e-41a2-b663-5fa5a39295c1" version="1" scripttimeout="300" password="a37e9082cbabcf9d1369dfae313c42ad" author="4" countdown="60" darkmode="" mode3d="" nogrid="" joinable="2" joinable_emails="" openable="1" openable_emails="" editable="2" editable_emails="" multi_config_active="">
+  <topology>
+    <nodes>
+      <node id="2" type="iol" template="iol" config="0" config_script="embedded" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Router.png" image="i86bi_linux-adventerprisek9-ms.156-3.M3a.bin" left="234" name="IOS" top="234" size="0" console="" ethernet="1" nvram="1024" ram="1024" serial="0" idlepc="0x0" cpu="0" cpulimit="1" iol_options="" keepalive="0">
+        <interface id="0" name="e0/0" type="ethernet" network_id="1" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="1" type="qemu" template="vyos" config="0" config_script="config_vyos.py" script_timeout="1200" config_data="" multi_config="W10=" delay="0" icon="Router.png" image="vyos-1.4.0" left="396" name="VyOS" top="231" size="0" console="telnet" ethernet="4" nvram="1024" ram="1024" serial="0" idlepc="0x0" cpu="1" cpulimit="1" uuid="2c2a0ef1-da9a-4e11-9509-ddbd20c6c1a7" firstmac="" first_nic="" qemu_options="-machine type=pc,accel=kvm -serial mon:stdio -nographic -no-user-config -nodefaults -rtc base=utc" qemu_version="2.12.0" qemu_arch="x86_64" qemu_nic="virtio-net-pci" username="" password="" eth_format="" console_2nd="" map_port="" map_port_2nd="">
+        <interface id="1" name="eth1" type="ethernet" network_id="2" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="3" type="docker" template="docker" config="0" config_script="config_docker.py" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Desktop.png" image="pnetlab/ubuntu_sv:latest" left="234" name="PC-1" top="408" size="0" console="telnet" ethernet="2" nvram="1024" ram="256" serial="0" idlepc="0x0" cpu="1" cpulimit="1" docker_options="--privileged" username="" password="" console_2nd="" map_port="" map_port_2nd="" eth1_dhcp="0" eth1_ip="">
+        <interface id="1" name="eth1" type="ethernet" network_id="1" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="4" type="docker" template="docker" config="0" config_script="config_docker.py" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Desktop.png" image="pnetlab/ubuntu_sv:latest" left="399" name="PC-2" top="405" size="0" console="telnet" ethernet="2" nvram="1024" ram="256" serial="0" idlepc="0x0" cpu="1" cpulimit="1" docker_options="--privileged" username="" password="" console_2nd="" map_port="" map_port_2nd="" eth1_dhcp="0" eth1_ip="">
+        <interface id="1" name="eth1" type="ethernet" network_id="2" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+    </nodes>
+    <networks>
+      <network id="1" type="bridge" name="Linux PC-1iface_1" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="2" type="bridge" name="PC-2iface_1" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+    </networks>
+  </topology>
+  <objects>
+    <textobjects>
+      <textobject id="1" name="txt 1" type="text">
+        <data>JTNDZGl2JTIwaWQlM0QlMjJjdXN0b21UZXh0MSUyMiUyMGNsYXNzJTNEJTIyY3VzdG9tU2hhcGUlMjBjdXN0b21UZXh0JTIwY29udGV4dC1tZW51JTIwY2stY29udGVudCUyMGp0ay1kcmFnZ2FibGUlMjB1aS1zZWxlY3RlZSUyMGRyYWdzdG9wcGVkJTIyJTIwZGF0YS1wYXRoJTNEJTIyMSUyMiUyMHN0eWxlJTNEJTIycG9zaXRpb24lM0ElMjBhYnNvbHV0ZSUzQiUyMGRpc3BsYXklM0ElMjBibG9jayUzQiUyMHRvcCUzQSUyMDg0cHglM0IlMjBsZWZ0JTNBJTIwMzE1cHglM0IlMjB3aWR0aCUzQSUyMDEwNXB4JTNCJTIwaGVpZ2h0JTNBJTIwNjJweCUzQiUyMGN1cnNvciUzQSUyMG1vdmUlM0IlMjB6LWluZGV4JTNBJTIwMTAwMSUzQiUyMiUzRSUzQ3AlMjBwb3NpdGlvbmFibGUlM0QlMjJ0cnVlJTIyJTNFJTNDYSUyMGhyZWYlM0QlMjJodHRwcyUzQSUyRiUyRmRvY3MuZ29vZ2xlLmNvbSUyRmRvY3VtZW50JTJGZCUyRjFwRXVjU3U0LW5xUDFBMW9ESDY1ZVdwNEk0cTd2eWJDVXctWGRlVHdJYlZnJTJGZWRpdCUzRnVzcCUzRHNoYXJpbmclMjIlMjB0YXJnZXQlM0QlMjJfYmxhbmslMjIlMjByZWwlM0QlMjJub29wZW5lciUyMG5vcmVmZXJyZXIlMjIlM0UlRDAlQTclRDAlOTAlRDAlOTIlRDAlOUUlMjBGQVElM0MlMkZhJTNFJTNDJTJGcCUzRSUzQyUyRmRpdiUzRQ==</data>
+      </textobject>
+    </textobjects>
+  </objects>
+</lab>
