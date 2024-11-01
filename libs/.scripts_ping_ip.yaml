@@ -9,10 +9,10 @@ include:
       function pingLinuxIp() {
       local node=$1
       local destination=$2
-      local command="ping -c 5 -W 1 $destination | tail -n 2 | head -n 1"
+      local command="ping -c 1 -W 1 $destination | tail -n 2 | head -n 1"
     - !reference [ .execute_telnet ]
     - |
-      local find=$(echo "$buffer" | grep "5 received")
+      local find=$(echo "$buffer" | grep "1 received")
       [ -z "$find" ] && echo "0" || echo "1"
       }
   iol:

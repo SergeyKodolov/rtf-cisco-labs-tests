@@ -1,0 +1,10 @@
+.check_ping:
+  # Принимает $1 - описание направления ping, $2 - команду выполнения ping
+  # Возвращает 0 - если ping успешный, 1 - пинг не прошёл
+  - |
+    function checkPing(){
+      local title=$1
+      local command=$2
+      echo "$title Проверка видимости..."
+      [[ $($command) != 1 ]] && { echo "$title: ERROR"; exit 1; } || echo "$title: OK"
+    }
