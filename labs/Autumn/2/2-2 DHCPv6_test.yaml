@@ -1,0 +1,323 @@
+include:
+  - '/opt/unetlab/libs/.all_node_active.yaml'
+  - '/opt/unetlab/libs/.scripts_get_ipv6.yaml'
+  - '/opt/unetlab/libs/.scripts_ping_ip.yaml'
+  - '/opt/unetlab/libs/.check_ping.yaml'
+
+all_node_active:
+  extends: .all_node_active
+  id: 1
+  before_script:
+    - allNodeId=("PC-A" "S1" "R1" "R2" "S2" "PC-B")
+
+node_have_ip:
+  id: 2
+  title: "Настройка адресов маршрутизаторов"
+  description: "Интерфейсам должны быть назначены IPv6 адреса"
+  before_script:
+    - !reference [ .scripts_get_ipv6 all ]
+  script:
+    - echo "[R1] Подключение..."
+    - R1_e00=$(getRouterIpv6 R1 eth0/0)
+    - echo "[R1] Получен eth0/0 = $R1_e00"
+    - R1_e00_ll=$(getRouterLinkLocalIpv6 R1 eth0/0)
+    - echo "[R1] Получен link-local eth0/0 = $R1_e00_ll"
+    - R1_e01=$(getRouterIpv6 R1 eth0/1)
+    - echo "[R1] Получен eth0/1 = $R1_e01"
+    - R1_e01_ll=$(getRouterLinkLocalIpv6 R1 eth0/1)
+    - echo "[R1] Получен link-local eth0/1 = $R1_e01_ll"
+
+    - echo "[R2] Подключение..."
+    - R2_e00=$(getRouterIpv6 R2 eth0/0)
+    - echo "[R2] Получен eth0/0 = $R2_e00"
+    - R2_e00_ll=$(getRouterLinkLocalIpv6 R2 eth0/0)
+    - echo "[R2] Получен link-local eth0/0 = $R2_e00_ll"
+    - R2_e01=$(getRouterIpv6 R2 eth0/1)
+    - echo "[R2] Получен eth0/1 = $R2_e01"
+    - R2_e01_ll=$(getRouterLinkLocalIpv6 R2 eth0/1)
+    - echo "[R2] Получен link-local eth0/1 = $R2_e01_ll"
+    
+    - |
+      # Проверка установки всех IP адресов
+      declare -A ipCheck=(
+        ["R1, eth0/0"]=$R1_e00
+        ["R1 link-local, eth0/0"]=$R1_e00_ll
+        ["R1, eth0/1"]=$R1_e01
+        ["R1 link-local, eth0/1"]=$R1_e01_ll
+        ["R2, eth0/0"]=$R2_e00
+        ["R2 link-local, eth0/0"]=$R2_e00_ll
+        ["R2, eth0/1"]=$R2_e01
+        ["R2 link-local, eth0/1"]=$R2_e01_ll
+      )
+      for key in "${!ipCheck[@]}"; do
+        value="${ipCheck[$key]}"
+        if [[ -z "$value" ]] ; then
+          echo "Ошибка установки ip адреса на $key"; exit 1
+        fi
+      done
+
+ping_routers_and_switches:
+  id: 3
+  title: "Проверка связности маршрутизаторов"
+  description: "Узлы должны пинговать друг друга"
+  before_script:
+    - !reference [ .scripts_get_ipv6 all ]
+    - !reference [ .scripts_ping_ip all ]
+    - !reference [ .check_ping ]
+  script:
+    - R1_e00=$(getRouterIpv6 R1 eth0/0)
+    - R1_e01=$(getRouterIpv6 R1 eth0/1)
+    - R2_e00=$(getRouterIpv6 R2 eth0/0)
+    - R2_e01=$(getRouterIpv6 R2 eth0/1)
+    - |
+      # Проверка установки всех IP адресов
+      declare -A ipCheck=(
+        ["R1, eth0/0"]=$R1_e00
+        ["R1, eth0/1"]=$R1_e01
+        ["R2, eth0/0"]=$R2_e00
+        ["R2, eth0/1"]=$R2_e01
+      )
+      for key in "${!ipCheck[@]}"; do
+        value="${ipCheck[$key]}"
+        if [[ -z "$value" ]] ; then
+          echo "Ошибка установки ip адреса на $key"; exit 1
+        fi
+      done
+    - |
+      TELNET_TIMEOUT=7
+      checkPing "[R1]->[R2:eth0/0]" "pingIolIp R1 $R2_e00"
+      checkPing "[R1]->[R2:eth0/1]" "pingIolIp R1 $R2_e01"
+      checkPing "[R2]->[R1:eth0/0]" "pingIolIp R2 $R1_e00"
+      checkPing "[R2]->[R1:eth0/1]" "pingIolIp R2 $R1_e01"
+      
+      echo "Success"
+
+dhcp_pool:
+  id: 4
+  title: "Проверка регистрации хостов в DHCP-сервере IPv6"
+  description: "Адреса PC-A и PC-B должны быть зарегистрированы в DHCP-сервере"
+  before_script:
+    - !reference [ .scripts_get_ipv6 all ]
+    - |
+      function findInPool() {
+      local node=$1
+      local target_ip=$2
+      local command="show ipv6 dhcp binding"
+    - !reference [ .execute_telnet ]
+    - |
+      local find=$(echo "$buffer" | grep "$target_ip")
+      [ -z "$find" ] && { echo "[$target_ip] not in pool: ERROR"; exit 1; } || echo "[$target_ip] in pool: OK"
+      }
+  script:
+    - PC_A_ip=$(getRouterIpv6 PC-A e0/0)
+    - PC_B_ip=$(getRouterIpv6 PC-B e0/0)
+    - |
+      # Проверка установки всех IP адресов
+      declare -A ipCheck=(
+        ["PC-A, e0/0"]=$PC_A_ip
+        ["PC-B, e0/0"]=$PC_B_ip
+      )
+      for key in "${!ipCheck[@]}"; do
+        value="${ipCheck[$key]}"
+        if [[ -z "$value" ]] ; then
+          echo "Ошибка установки ip адреса на $key"; exit 1
+        fi
+      done
+    - echo "[PC-A] Получен eth0 = $PC_A_ip"
+    - findInPool R1 $PC_A_ip
+    - echo "[PC-B] Получен eth0 = $PC_B_ip"
+    - findInPool R1 $PC_B_ip
+
+ping_pc:
+  id: 5
+  title: "Проверка связности PC-A и PC-B по IPv6"
+  description: "Узлы должны пинговать друг друга"
+  before_script:
+    - !reference [ .scripts_get_ipv6 all ]
+    - !reference [ .scripts_ping_ip all ]
+    - !reference [ .check_ping ]
+  script:
+    - PC_A_ip=$(getRouterIpv6 PC-A e0/0)
+    - PC_B_ip=$(getRouterIpv6 PC-B e0/0)
+    - |
+      # Проверка установки всех IP адресов
+      declare -A ipCheck=(
+        ["PC-A, e0/0"]=$PC_A_ip
+        ["PC-B, e0/0"]=$PC_B_ip
+      )
+      for key in "${!ipCheck[@]}"; do
+        value="${ipCheck[$key]}"
+        if [[ -z "$value" ]] ; then
+          echo "Ошибка установки ip адреса на $key"; exit 1
+        fi
+      done
+    - |
+      TELNET_TIMEOUT=7
+      checkPing "[PC-A]->[PC-B]" "pingIolIp PC-A $PC_B_ip"
+      checkPing "[PC-B]->[PC-A]" "pingIolIp PC-B $PC_A_ip"
+      
+      echo "Success"
+
+# node_have_ip:
+#   id: 2
+#   title: "Настройка адресов IPv4 коммутаторов и маршрутизаторов"
+#   description: "Интерфейсам должны быть назначены IPv4 адреса"
+#   before_script:
+#     - !reference [ .scripts_get_ip all ]
+#   script:
+#     - echo "[R1] Подключение..."
+#     - R1_e00=$(getRouterIp R1 eth0/0)
+#     - echo "[R1] Получен eth0/0 = $R1_e00"
+#     - R1_e01_100=$(getRouterIp R1 eth0/1.100)
+#     - echo "[R1] Получен eth0/1.100 = $R1_e01_100"
+#     - R1_e01_200=$(getRouterIp R1 eth0/1.200)
+#     - echo "[R1] Получен eth0/1.200 = $R1_e01_200"
+
+#     - echo "[R2] Подключение..."
+#     - R2_e00=$(getRouterIp R2 eth0/0)
+#     - echo "[R2] Получен eth0/0 = $R2_e00"
+#     - R2_e01=$(getRouterIp R2 eth0/1)
+#     - echo "[R2] Получен eth0/1 = $R2_e01"
+
+#     - echo "[S1] Подключение..."
+#     - S1_vlan200=$(getSwitchIp S1 vlan200)
+#     - echo "[S1] Получен vlan200 = $S1_vlan200"
+
+#     - echo "[S2] Подключение..."
+#     - S2_vlan1=$(getSwitchIp S2 vlan1)
+#     - echo "[S2] Получен vlan1 = $S2_vlan1"
+
+#     - |
+#       # Проверка установки всех IP адресов
+#       declare -A ipCheck=(
+#         ["R1, eth0/0"]=$R1_e00
+#         ["R1, eth0/1.100"]=$R1_e01_100
+#         ["R1, eth0/1.200"]=$R1_e01_200
+#         ["R2, eth0/0"]=$R2_e00
+#         ["R2, eth0/1"]=$R2_e01
+#         ["S1, vlan200"]=$S1_vlan200
+#         ["S2, vlan1"]=$S2_vlan1
+#       )
+#       for key in "${!ipCheck[@]}"; do
+#         value="${ipCheck[$key]}"
+#         if [[ -z "$value" ]] ; then
+#           echo "Ошибка установки ip адреса на $key"; exit 1
+#         fi
+#       done
+
+# ping_routers_and_switches:
+#   id: 3
+#   title: "Проверка связности коммутаторов и маршрутизаторов по IPv4"
+#   description: "Узлы должны пинговать друг друга"
+#   before_script:
+#     - !reference [ .scripts_get_ip all ]
+#     - !reference [ .scripts_ping_ip all ]
+#     - !reference [ .check_ping ]
+#   script:
+#     - R1_e00=$(getRouterIp R1 eth0/0)
+#     - R1_e01_100=$(getRouterIp R1 eth0/1.100)
+#     - R1_e01_200=$(getRouterIp R1 eth0/1.200)
+#     - R2_e00=$(getRouterIp R2 eth0/0)
+#     - R2_e01=$(getRouterIp R2 eth0/1)
+#     - S1_vlan200=$(getSwitchIp S1 vlan200)
+#     - S2_vlan1=$(getSwitchIp S2 vlan1)
+#     - |
+#       # Проверка установки всех IP адресов
+#       declare -A ipCheck=(
+#         ["R1, eth0/0"]=$R1_e00
+#         ["R1, eth0/1.100"]=$R1_e01_100
+#         ["R1, eth0/1.200"]=$R1_e01_200
+#         ["R2, eth0/0"]=$R2_e00
+#         ["R2, eth0/1"]=$R2_e01
+#         ["S1, vlan200"]=$S1_vlan200
+#         ["S2, vlan1"]=$S2_vlan1
+#       )
+#       for key in "${!ipCheck[@]}"; do
+#         value="${ipCheck[$key]}"
+#         if [[ -z "$value" ]] ; then
+#           echo "Ошибка установки ip адреса на $key"; exit 1
+#         fi
+#       done
+#     - |
+#       TELNET_TIMEOUT=7
+#       checkPing "[S1]->[R1:eth0/0]" "pingIolIp S1 $R1_e00"
+#       checkPing "[S1]->[R1:eth0/1.100]" "pingIolIp S1 $R1_e01_100"
+#       checkPing "[S1]->[R1:eth0/1.200]" "pingIolIp S1 $R1_e01_200"
+#       checkPing "[S1]->[R2:eth0/0]" "pingIolIp S1 $R2_e00"
+#       checkPing "[S1]->[R2:eth0/1]" "pingIolIp S1 $R2_e01"
+#       checkPing "[S1]->[S2:vlan1]" "pingIolIp S1 $S2_vlan1"
+
+#       checkPing "[S2]->[R1:eth0/0]" "pingIolIp S2 $R1_e00"
+#       checkPing "[S2]->[R1:eth0/1.100]" "pingIolIp S2 $R1_e01_100"
+#       checkPing "[S2]->[R1:eth0/1.200]" "pingIolIp S2 $R1_e01_200"
+#       checkPing "[S2]->[R2:eth0/0]" "pingIolIp S2 $R2_e00"
+#       checkPing "[S2]->[R2:eth0/1]" "pingIolIp S2 $R2_e01"
+#       checkPing "[S2]->[S1:vlan1]" "pingIolIp S2 $S1_vlan200"
+      
+#       echo "Success"
+
+# dhcp_pool:
+#   id: 4
+#   title: "Проверка регистрации хостов в DHCP-сервере IPv4"
+#   description: "Адреса PC-A и PC-B должны быть зарегистрированы в DHCP-сервере IPv4"
+#   before_script:
+#     - !reference [ .scripts_get_ip all ]
+#     - |
+#       function findInPool() {
+#       local node=$1
+#       local target_ip=$2
+#       local command="show ip dhcp binding"
+#     - !reference [ .execute_telnet ]
+#     - |
+#       local find=$(echo "$buffer" | grep "$target_ip")
+#       [ -z "$find" ] && { echo "[$target_ip] not in pool: ERROR"; exit 1; } || echo "[$target_ip] in pool: OK"
+#       }
+#   script:
+#     - PC_A_ip=$(getRouterIp PC-A e0/0)
+#     - PC_B_ip=$(getRouterIp PC-B e0/0)
+#     - |
+#       # Проверка установки всех IP адресов
+#       declare -A ipCheck=(
+#         ["PC-A, e0/0"]=$PC_A_ip
+#         ["PC-B, e0/0"]=$PC_B_ip
+#       )
+#       for key in "${!ipCheck[@]}"; do
+#         value="${ipCheck[$key]}"
+#         if [[ -z "$value" ]] ; then
+#           echo "Ошибка установки ip адреса на $key"; exit 1
+#         fi
+#       done
+#     - echo "[PC-A] Получен eth0 = $PC_A_ip"
+#     - findInPool R1 $PC_A_ip
+#     - echo "[PC-B] Получен eth0 = $PC_B_ip"
+#     - findInPool R1 $PC_B_ip
+
+# ping_pc:
+#   id: 5
+#   title: "Проверка связности PC-A и PC-B по IPv4"
+#   description: "Узлы должны пинговать друг друга"
+#   before_script:
+#     - !reference [ .scripts_get_ip all ]
+#     - !reference [ .scripts_ping_ip all ]
+#     - !reference [ .check_ping ]
+#   script:
+#     - PC_A_ip=$(getRouterIp PC-A e0/0)
+#     - PC_B_ip=$(getRouterIp PC-B e0/0)
+#     - |
+#       # Проверка установки всех IP адресов
+#       declare -A ipCheck=(
+#         ["PC-A, e0/0"]=$PC_A_ip
+#         ["PC-B, e0/0"]=$PC_B_ip
+#       )
+#       for key in "${!ipCheck[@]}"; do
+#         value="${ipCheck[$key]}"
+#         if [[ -z "$value" ]] ; then
+#           echo "Ошибка установки ip адреса на $key"; exit 1
+#         fi
+#       done
+#     - |
+#       TELNET_TIMEOUT=7
+#       checkPing "[PC-A]->[PC-B]" "pingIolIp PC-A $PC_B_ip"
+#       checkPing "[PC-B]->[PC-A]" "pingIolIp PC-B $PC_A_ip"
+      
+#       echo "Success"

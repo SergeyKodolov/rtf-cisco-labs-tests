@@ -1,0 +1,31 @@
+include:
+  - '.execute_telnet.yaml'
+
+.scripts_get_ipv6:
+  # Принимает $1 - название ноды для исполнения ping, $2 - интерфейс для просмотра ip адреса
+  # Возвращает один параметр - ip адрес или пустая строка
+  router:
+    - |
+      function getRouterIpv6() {
+      local node=$1
+      local eth=${2-eth0/0}
+      local command="show ipv6 interface brief $eth"
+    - !reference [ .execute_telnet ]
+    - |
+      local ip=$(echo "$buffer" | awk '/^[[:space:]]*(2001)/ {print $1; exit}')
+      echo "$ip"
+      }
+  router_link_local:
+    - |
+      function getRouterLinkLocalIpv6() {
+      local node=$1
+      local eth=${2-eth0/0}
+      local command="show ipv6 interface brief $eth"
+    - !reference [ .execute_telnet ]
+    - |
+      local ip=$(echo "$buffer" | awk '/^[[:space:]]*(FE80)/ {print $1; exit}')
+      echo "$ip"
+      }
+  all:
+    - !reference [ .scripts_get_ipv6 router ]
+    - !reference [ .scripts_get_ipv6 router_link_local ]
