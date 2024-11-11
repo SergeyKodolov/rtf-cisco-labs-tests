@@ -1,0 +1,150 @@
+include:
+  - '/opt/unetlab/libs/.all_node_active.yaml'
+  - '/opt/unetlab/libs/.scripts_get_ip.yaml'
+  - '/opt/unetlab/libs/.scripts_ping_ip.yaml'
+  - '/opt/unetlab/libs/.check_ping.yaml'
+
+all_node_active:
+  extends: .all_node_active
+  id: 1
+  before_script:
+    - allNodeId=("R1" "R2" "R3" "PC1" "PC2" "PC3")
+
+node_have_ip:
+  id: 2
+  title: "Настройка адресов устройств"
+  description: "Интерфейсам должны быть назначены IP адреса"
+  before_script:
+    - !reference [ .scripts_get_ip all ]
+  script:
+    - echo "[R1] Подключение..."
+    - R1_e00=$(getRouterIp R1 eth0/0)
+    - echo "[R1] Получен eth0/0 = $R1_e00"
+    - R1_e01=$(getRouterIp R1 eth0/1)
+    - echo "[R1] Получен eth0/1 = $R1_e01"
+    - R1_e02=$(getRouterIp R1 eth0/2)
+    - echo "[R1] Получен eth0/2 = $R1_e02"
+
+    - echo "[R2] Подключение..."
+    - R2_e00=$(getRouterIp R2 eth0/0)
+    - echo "[R2] Получен eth0/0 = $R2_e00"
+    - R2_e01=$(getRouterIp R2 eth0/1)
+    - echo "[R2] Получен eth0/1 = $R2_e01"
+    - R2_e02=$(getRouterIp R2 eth0/2)
+    - echo "[R2] Получен eth0/2 = $R2_e02"
+    - R2_lo1=$(getRouterIp R2 lo1)
+    - echo "[R2] Получен lo1 = $R2_lo1"
+
+    - echo "[R3] Подключение..."
+    - R3_e00=$(getRouterIp R3 eth0/0)
+    - echo "[R3] Получен eth0/0 = $R3_e00"
+    - R3_e01=$(getRouterIp R3 eth0/1)
+    - echo "[R3] Получен eth0/1 = $R3_e01"
+    - R3_e02=$(getRouterIp R3 eth0/2)
+    - echo "[R3] Получен eth0/2 = $R3_e02"
+
+    - echo "[PC1] Подключение..."
+    - PC1_eth1=$(getLinuxIp PC1 eth1)
+    - echo "[PC1] Получен eth1 = $PC1_eth1"
+
+    - echo "[PC2] Подключение..."
+    - PC2_eth1=$(getLinuxIp PC2 eth1)
+    - echo "[PC2] Получен eth1 = $PC2_eth1"
+
+    - echo "[PC3] Подключение..."
+    - PC3_eth1=$(getLinuxIp PC3 eth1)
+    - echo "[PC3] Получен eth1 = $PC3_eth1"
+    - |
+      # Проверка установки всех IP адресов
+      declare -A ipCheck=(
+        ["R1, eth0/0"]=$R1_e00
+        ["R1, eth0/1"]=$R1_e01
+        ["R1, eth0/2"]=$R1_e02
+        ["R2, eth0/0"]=$R2_e00
+        ["R2, eth0/1"]=$R2_e01
+        ["R2, eth0/2"]=$R2_e02
+        ["R2, lo1"]=$R2_lo1
+        ["R3, eth0/0"]=$R3_e00
+        ["R3, eth0/1"]=$R3_e01
+        ["R3, eth0/2"]=$R3_e02
+        ["PC1, eth1"]=$PC1_eth1
+        ["PC2, eth1"]=$PC2_eth1
+        ["PC3, eth1"]=$PC3_eth1
+      )
+      for key in "${!ipCheck[@]}"; do
+        value="${ipCheck[$key]}"
+        if [[ -z "$value" ]] ; then
+          echo "Ошибка установки ip адреса на $key"; exit 1
+        fi
+      done
+
+ping_all:
+  id: 3
+  title: "Проверка связности PC"
+  description: "Узлы должны пинговать друг друга"
+  before_script:
+    - !reference [ .scripts_get_ip all ]
+    - !reference [ .scripts_ping_ip all ]
+    - !reference [ .check_ping ]
+  script:
+    - PC1_eth1=$(getLinuxIp PC1 eth1)
+    - PC2_eth1=$(getLinuxIp PC2 eth1)
+    - PC3_eth1=$(getLinuxIp PC3 eth1)
+    - |
+      # Проверка установки всех IP адресов
+      declare -A ipCheck=(
+        ["PC1, eth1"]=$PC1_eth1
+        ["PC2, eth1"]=$PC2_eth1
+        ["PC3, eth1"]=$PC3_eth1
+      )
+      for key in "${!ipCheck[@]}"; do
+        value="${ipCheck[$key]}"
+        if [[ -z "$value" ]] ; then
+          echo "Ошибка установки ip адреса на $key"; exit 1
+        fi
+      done
+    - |
+      TELNET_TIMEOUT=7
+      checkPing "[PC1]->[PC2]" "pingLinuxIp PC1 $PC2_eth1"
+      checkPing "[PC1]->[PC3]" "pingLinuxIp PC1 $PC3_eth1"
+      checkPing "[PC2]->[PC1]" "pingLinuxIp PC2 $PC1_eth1"
+      checkPing "[PC2]->[PC3]" "pingLinuxIp PC2 $PC3_eth1"
+      checkPing "[PC3]->[PC1]" "pingLinuxIp PC3 $PC1_eth1"
+      checkPing "[PC3]->[PC2]" "pingLinuxIp PC3 $PC2_eth1"
+
+      echo "Success"
+
+ping_loopback:
+  id: 4
+  title: "Проверка связности PC и loopback"
+  description: "Узлы должны пинговать loopback"
+  before_script:
+    - !reference [ .scripts_get_ip all ]
+    - !reference [ .scripts_ping_ip all ]
+    - !reference [ .check_ping ]
+  script:
+    - PC1_eth1=$(getLinuxIp PC1 eth1)
+    - PC2_eth1=$(getLinuxIp PC2 eth1)
+    - PC3_eth1=$(getLinuxIp PC3 eth1)
+    - R2_lo1=$(getRouterIp R2 lo1)
+    - |
+      # Проверка установки всех IP адресов
+      declare -A ipCheck=(
+        ["PC1, eth1"]=$PC1_eth1
+        ["PC2, eth1"]=$PC2_eth1
+        ["PC3, eth1"]=$PC3_eth1
+        ["R2, lo1"]=$R2_lo1
+      )
+      for key in "${!ipCheck[@]}"; do
+        value="${ipCheck[$key]}"
+        if [[ -z "$value" ]] ; then
+          echo "Ошибка установки ip адреса на $key"; exit 1
+        fi
+      done
+    - |
+      TELNET_TIMEOUT=7
+      checkPing "[PC1]->[PC2]" "pingLinuxIp PC1 $R2_lo1"
+      checkPing "[PC2]->[PC1]" "pingLinuxIp PC2 $R2_lo1"
+      checkPing "[PC3]->[PC2]" "pingLinuxIp PC3 $R2_lo1"
+
+      echo "Success"
