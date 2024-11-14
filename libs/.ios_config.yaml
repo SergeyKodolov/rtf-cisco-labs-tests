@@ -1,0 +1,36 @@
+include:
+  - '.execute_telnet.yaml'
+
+.disable_interface:
+  # Принимает $1 - название ноды для исполнения команды, $2 - интерфейс для выключения
+  - |
+    function disableInterface() {
+    local node=$1
+    local eth=${2-eth0/0}
+
+    local command="conf t
+    int $eth
+    shut
+    end"
+
+  - !reference [ .execute_telnet ]
+  - |
+    echo "[$node] $eth выключен"
+    }
+
+.enable_interface:
+  # Принимает $1 - название ноды для исполнения команды, $2 - интерфейс для включения
+  - |
+    function enableInterface() {
+    local node=$1
+    local eth=${2-eth0/0}
+
+    local command="conf t
+    int $eth
+    no shut
+    end"
+
+  - !reference [ .execute_telnet ]
+  - |
+    echo "[$node] $eth включен"
+    }
