@@ -12,6 +12,7 @@ include:
     int $eth
     shut
     end"
+    echo "[$node] $eth выключаем.."
 
   - !reference [ .execute_telnet ]
   - |
@@ -29,6 +30,7 @@ include:
     int $eth
     no shut
     end"
+    echo "[$node] $eth включаем.."
 
   - !reference [ .execute_telnet ]
   - |
