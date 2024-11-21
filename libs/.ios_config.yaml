@@ -36,3 +36,66 @@ include:
   - |
     echo "[$node] $eth включен"
     }
+
+.scripts_ospf_cost:  
+  set:
+    # Принимает $1 - название ноды для исполнения команды, $2 - интерфейс для настройки, $3 - стоимость
+    - |
+      function setOSPFCost() {
+      local node=$1
+      local eth=$2
+      local cost=$3
+
+      local command="conf t
+      int $eth
+      ip ospf cost $cost
+      end"
+      echo "[$node] $eth устанавливаем стоимость.."
+
+    - !reference [ .execute_telnet ]
+    - |
+      echo "[$node] $eth стоимость $cost"
+      echo "Ждем 10 сек..."
+      sleep 10
+      }
+
+  delete:
+    # Принимает $1 - название ноды для исполнения команды, $2 - интерфейс для настройки, $3 - стоимость
+    - |
+      function deleteOSPFCost() {
+      local node=$1
+      local eth=$2
+      local cost=$3
+
+      local command="conf t
+      int $eth
+      no ip ospf cost $cost
+      end"
+      echo "[$node] $eth удаляем стоимость.."
+
+    - !reference [ .execute_telnet ]
+    - |
+      echo "[$node] $eth стоимость удалена"
+      echo "Ждем 10 сек..."
+      sleep 10
+      }
+
+  get:
+    # Принимает $1 - название ноды для исполнения команды, $2 - интерфейс для проверки
+    - |
+      function getOSPFCost() {
+      local node=$1
+      local eth=$2
+
+      local command="show ip ospf int $eth"
+
+    - !reference [ .execute_telnet ]
+    - |
+      local cost=$(echo "$buffer" | grep "Cost:" | awk '{print $NF}')
+      echo "$cost"
+      }
+
+  all:
+    - !reference [ .scripts_ospf_cost get ]
+    - !reference [ .scripts_ospf_cost set ]
+    - !reference [ .scripts_ospf_cost delete ]

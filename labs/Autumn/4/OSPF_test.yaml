@@ -3,6 +3,7 @@ include:
   - '/opt/unetlab/libs/.scripts_get_ip.yaml'
   - '/opt/unetlab/libs/.scripts_ping_ip.yaml'
   - '/opt/unetlab/libs/.check_ping.yaml'
+  - '/opt/unetlab/libs/.ios_config.yaml'
 
 all_node_active:
   extends: .all_node_active
@@ -114,8 +115,55 @@ ping_all:
 
       echo "Success"
 
-ping_loopback:
+default_originate:
   id: 4
+  title: "Проверка распространения маршрута по умолчанию"
+  description: "R1 и R3 должны получить маршрут по умолчанию и НЕ должны получить маршрут до 8.8.8.8"
+  before_script:
+    - |
+      function findIpOSPFRoute() {
+      local node=$1
+      local target_net=$2
+      local command="show ip route ospf"
+    - !reference [ .execute_telnet ]
+    - |
+      local find=$(echo "$buffer" | grep "$target_net")
+      [ -z "$find" ] && echo "0" || echo "1"
+      }
+    - |
+      function routeExists() {
+      local node=$1
+      local target_net=$2
+      echo "[$node] Маршрут до $target_net существует..."
+      result=$(findIpOSPFRoute "$node" "$target_net")
+      if [ "$result" -eq 0 ]; then
+          echo "[$node] Ошибка"
+          exit 1
+      else
+          echo "[$node] OK"
+      fi
+      }
+    - |
+      function routeNotExists() {
+      local node=$1
+      local target_net=$2
+      echo "[$node] Маршрут до $target_net не существует..."
+      result=$(findIpOSPFRoute "$node" "$target_net")
+      if [ "$result" -eq 1 ]; then
+          echo "[$node] Ошибка"
+          exit 1
+      else
+          echo "[$node] OK"
+      fi
+      }
+  script:
+    - routeExists R1 "0.0.0.0"
+    - routeExists R3 "0.0.0.0"
+    - routeNotExists R1 "8.8.8.8"
+    - routeNotExists R3 "8.8.8.8"
+
+ping_loopback:
+  id: 5
   title: "Проверка связности PC и loopback"
   description: "Узлы должны пинговать loopback"
   before_script:
@@ -148,3 +196,186 @@ ping_loopback:
       checkPing "[PC3]->[R2]" "pingLinuxIp PC3 $R2_lo1"
 
       echo "Success"
+
+ospf_check:
+  id: 6
+  title: "Сценарий для проверки OSPF"
+  description: "При изменении стоимости интерфейса таблица маршрутизации изменяется на всех маршрутизаторах"
+  before_script:
+    - !reference [ .scripts_get_ip all ]
+    - !reference [ .scripts_ping_ip all ]
+    - !reference [ .check_ping ]
+    - !reference [ .scripts_ospf_cost all ]
+    - |
+      function traceroute() {
+      local node=$1
+      local source_ip=$2
+      local target_ip=$3
+      local command="traceroute $target_ip source $source_ip"
+    - !reference [ .execute_telnet ]
+    - |
+      local trace=$(echo "$buffer" | grep sec | awk '{print $1 " " $2}')
+      echo "$trace"
+      }
+  script:
+    - R1_e01_cost=$(getOSPFCost R1 e0/1)
+    - |
+      if [[ -z "$R1_e01_cost" ]] ; then
+        echo "Ошибка установки стоимости на R1 e0/1"; exit 1
+      else
+        echo "[R1] e0/1 стоимость $R1_e01_cost"
+      fi
+
+    - R1_e00=$(getRouterIp R1 eth0/0)
+    - R1_e01=$(getRouterIp R1 eth0/1)
+    - R1_e02=$(getRouterIp R1 eth0/2)
+    - R2_e00=$(getRouterIp R2 eth0/0)
+    - R2_e01=$(getRouterIp R2 eth0/1)
+    - R2_e02=$(getRouterIp R2 eth0/2)
+    - R3_e00=$(getRouterIp R3 eth0/0)
+    - R3_e01=$(getRouterIp R3 eth0/1)
+    - R3_e02=$(getRouterIp R3 eth0/2)
+    - |
+      # Проверка установки всех IP адресов
+      declare -A ipCheck=(
+        ["R1, eth0/0"]=$R1_e00
+        ["R1, eth0/1"]=$R1_e01
+        ["R1, eth0/2"]=$R1_e02
+        ["R2, eth0/0"]=$R2_e00
+        ["R2, eth0/1"]=$R2_e01
+        ["R2, eth0/2"]=$R2_e02
+        ["R3, eth0/0"]=$R3_e00
+        ["R3, eth0/1"]=$R3_e01
+        ["R3, eth0/2"]=$R3_e02
+      )
+      for key in "${!ipCheck[@]}"; do
+        value="${ipCheck[$key]}"
+        if [[ -z "$value" ]] ; then
+          echo "Ошибка установки ip адреса на $key"; exit 1
+        fi
+      done
+
+    - |
+      TELNET_TIMEOUT=10
+
+      echo "[R1 e0/2] -> [R2 e0/2] Проверяем трассировку..."
+      trace_result=$(traceroute R1 $R1_e02 $R2_e02)
+
+      trace_correct="1 $R2_e00"
+
+      if [[ "$trace_result" == "$trace_correct" ]]; then
+          echo "$trace_result"
+          echo "OK"
+      else
+          echo "Результат:"
+          echo "$trace_result"
+          echo "Ожидается:"
+          echo "$trace_correct"
+          echo "Ошибка"
+          exit 1
+      fi
+
+      echo "[R1 e0/2] -> [R3 e0/2] Проверяем трассировку..."
+      trace_result=$(traceroute R1 $R1_e02 $R3_e02)
+
+      trace_correct="1 $R2_e00
+      2 $R3_e00"
+
+      if [[ "$trace_result" == "$trace_correct" ]]; then
+          echo "$trace_result"
+          echo "OK"
+      else
+          echo "Результат:"
+          echo "$trace_result"
+          echo "Ожидается:"
+          echo "$trace_correct"
+          echo "Ошибка"
+          exit 1
+      fi
+
+      deleteOSPFCost R1 e0/1 $R1_e01_cost
+
+      echo "[R1 e0/2] -> [R2 e0/2] Проверяем трассировку..."
+      trace_result=$(traceroute R1 $R1_e02 $R2_e02)
+
+      trace_correct="1 $R2_e00"
+
+      if [[ "$trace_result" == "$trace_correct" ]]; then
+          echo "$trace_result"
+          echo "OK"
+      else
+          echo "Результат:"
+          echo "$trace_result"
+          echo "Ожидается:"
+          echo "$trace_correct"
+          echo "Ошибка"
+          echo "Восстановление конфигурации..."
+          setOSPFCost R1 e0/1 $R1_e01_cost
+          exit 1
+      fi
+
+      echo "[R1 e0/2] -> [R3 e0/2] Проверяем трассировку..."
+      trace_result=$(traceroute R1 $R1_e02 $R3_e02)
+
+      trace_correct="1 $R3_e01"
+
+      if [[ "$trace_result" == "$trace_correct" ]]; then
+          echo "$trace_result"
+          echo "OK"
+      else
+          echo "Результат:"
+          echo "$trace_result"
+          echo "Ожидается:"
+          echo "$trace_correct"
+          echo "Ошибка"
+          echo "Восстановление конфигурации..."
+          setOSPFCost R1 e0/1 $R1_e01_cost
+          exit 1
+      fi
+
+      setOSPFCost R1 e0/0 $R1_e01_cost
+
+      echo "[R1 e0/2] -> [R2 e0/2] Проверяем трассировку..."
+      trace_result=$(traceroute R1 $R1_e02 $R2_e02)
+
+      trace_correct="1 $R3_e01
+      2 $R2_e01"
+
+      if [[ "$trace_result" == "$trace_correct" ]]; then
+          echo "$trace_result"
+          echo "OK"
+      else
+          echo "Результат:"
+          echo "$trace_result"
+          echo "Ожидается:"
+          echo "$trace_correct"
+          echo "Ошибка"
+          echo "Восстановление конфигурации..."
+          deleteOSPFCost R1 e0/0 $R1_e01_cost
+          setOSPFCost R1 e0/1 $R1_e01_cost
+          exit 1
+      fi
+
+      echo "[R1 e0/2] -> [R3 e0/2] Проверяем трассировку..."
+      trace_result=$(traceroute R1 $R1_e02 $R3_e02)
+
+      trace_correct="1 $R3_e01"
+
+      if [[ "$trace_result" == "$trace_correct" ]]; then
+          echo "$trace_result"
+          echo "OK"
+      else
+          echo "Результат:"
+          echo "$trace_result"
+          echo "Ожидается:"
+          echo "$trace_correct"
+          echo "Ошибка"
+          echo "Восстановление конфигурации..."
+          deleteOSPFCost R1 e0/0 $R1_e01_cost
+          setOSPFCost R1 e0/1 $R1_e01_cost
+          exit 1
+      fi
+
+      deleteOSPFCost R1 e0/0 $R1_e01_cost
+      setOSPFCost R1 e0/1 $R1_e01_cost
+
