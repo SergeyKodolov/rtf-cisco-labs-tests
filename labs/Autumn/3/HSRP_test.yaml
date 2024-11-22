@@ -71,6 +71,8 @@ node_have_ip:
         fi
       done
 
+      echo "Тест пройден успешно!"
+
 ping_all:
   id: 3
   title: "Проверка связности PC"
@@ -99,7 +101,7 @@ ping_all:
       checkPing "[PC1]->[PC2]" "pingLinuxIp PC1 $PC2_eth1"
       checkPing "[PC2]->[PC1]" "pingLinuxIp PC2 $PC1_eth1"
 
-      echo "Success"
+      echo "Тест пройден успешно!"
 
 ping_loopback:
   id: 4
@@ -131,7 +133,7 @@ ping_loopback:
       checkPing "[PC1]->[R2]" "pingLinuxIp PC1 $R2_lo1"
       checkPing "[PC2]->[R2]" "pingLinuxIp PC2 $R2_lo1"
 
-      echo "Success"
+      echo "Тест пройден успешно!"
 
 hsrp_check:
   id: 5
@@ -177,7 +179,7 @@ hsrp_check:
       enableInterface R2 e0/0
       enableInterface R1 e0/1
 
-      echo "Success"
+      echo "Ок, продолжаем.."
 
       disableInterface R2 e0/1
       disableInterface R3 e0/1
@@ -193,7 +195,7 @@ hsrp_check:
       enableInterface R2 e0/1
       enableInterface R3 e0/1
 
-      echo "Success"
+      echo "Тест пройден успешно!"
 
 # disable_R2_e00:
 #   id: 6

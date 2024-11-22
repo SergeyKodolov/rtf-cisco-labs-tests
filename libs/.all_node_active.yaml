@@ -11,4 +11,4 @@
         fi
         echo "[$nodeId] Запущен"
       done
-      echo "Success"
+      echo "Тест пройден успешно!"

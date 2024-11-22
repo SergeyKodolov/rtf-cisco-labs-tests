@@ -55,6 +55,8 @@ node_have_ip:
         fi
       done
 
+      echo "Тест пройден успешно!"
+
 ping_local:
   id: 3
   title: "Проверка связности устройств в локальной сети"
@@ -108,7 +110,7 @@ ping_local:
 
       checkPing "[R1]->[R2]" "pingIolIp R1 $R2_ip1"
       
-      echo "Success"
+      echo "Тест пройден успешно!"
 
 ping_global:
   id: 4
@@ -163,4 +165,4 @@ ping_global:
 
       checkPing "[vPC1]->[vPC2]" "pingLinuxIp vPC1 $vPC2_ip"
       
-      echo "Success"
+      echo "Тест пройден успешно!"

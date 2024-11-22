@@ -79,6 +79,8 @@ node_have_ip:
         fi
       done
 
+      echo "Тест пройден успешно!"
+
 ping_all:
   id: 3
   title: "Проверка связности PC"
@@ -113,7 +115,7 @@ ping_all:
       checkPing "[PC3]->[PC1]" "pingLinuxIp PC3 $PC1_eth1"
       checkPing "[PC3]->[PC2]" "pingLinuxIp PC3 $PC2_eth1"
 
-      echo "Success"
+      echo "Тест пройден успешно!"
 
 default_originate:
   id: 4
@@ -161,6 +163,7 @@ default_originate:
     - routeExists R3 "0.0.0.0"
     - routeNotExists R1 "8.8.8.8"
     - routeNotExists R3 "8.8.8.8"
+    - echo "Тест пройден успешно!"
 
 ping_loopback:
   id: 5
@@ -195,7 +198,7 @@ ping_loopback:
       checkPing "[PC2]->[R2]" "pingLinuxIp PC2 $R2_lo1"
       checkPing "[PC3]->[R2]" "pingLinuxIp PC3 $R2_lo1"
 
-      echo "Success"
+      echo "Тест пройден успешно!"
 
 ospf_check:
   id: 6
@@ -378,4 +381,6 @@ ospf_check:
 
       deleteOSPFCost R1 e0/0 $R1_e01_cost
       setOSPFCost R1 e0/1 $R1_e01_cost
+
+      echo "Тест пройден успешно!"
 

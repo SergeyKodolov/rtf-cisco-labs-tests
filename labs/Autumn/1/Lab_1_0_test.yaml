@@ -46,6 +46,8 @@ node_have_ip:
         fi
       done
 
+      echo "Тест пройден успешно!"
+
 ping:
   id: 3
   title: "Проверка связности устройств"
@@ -99,5 +101,5 @@ ping:
       
       checkPing "[PC-A]->[PC-B]" "pingLinuxIp PC-A $PC_B_ip"
       checkPing "[PC-B]->[PC-A]" "pingLinuxIp PC-B $PC_A_ip"
-      echo "Success"
+      echo "Тест пройден успешно!"
       

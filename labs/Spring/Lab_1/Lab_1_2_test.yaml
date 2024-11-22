@@ -46,6 +46,8 @@ vyos_have_ip:
         fi
       done
 
+      echo "Тест пройден успешно!"
+
 pc_have_ip:
   id: 3
   title: "Настройка адресов PC"
@@ -71,6 +73,8 @@ pc_have_ip:
           echo "Ошибка установки ip адреса на $key"; exit 1
         fi
       done
+
+      echo "Тест пройден успешно!"
 
 ping:
   id: 4
@@ -111,5 +115,5 @@ ping:
       checkPing "[IOS]->[PC-1]" "pingIolIp IOS $PC_1_ip"
       checkPing "[PC-2]->[VyOS:eth1]" "pingLinuxIp PC-2 $VyOS_ip"
       checkPing "[VyOS]->[PC-2]" "pingVyosIp VyOS $PC_2_ip"
-      echo "Success"
+      echo "Тест пройден успешно!"
       

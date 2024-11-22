@@ -41,7 +41,7 @@ ping_gateway:
       checkPing "[PC-A]->[R1:eth0/0]" "pingLinuxIp PC-A $R1_ip0"
       checkPing "[S1]->[R1:eth0/0]" "pingIolIp S1 $R1_ip0"
       checkPing "[PC-B]->[R1:eth0/1]" "pingLinuxIp PC-B $R1_ip1"
-      echo "Success"
+      echo "Тест пройден успешно!"
 
 ping_neighbours:
   id: 1
@@ -83,5 +83,5 @@ ping_neighbours:
       checkPing "[S1]->[PC-B]" "pingIolIp S1 $PC_B_ip"
       checkPing "[PC-B]->[PC-A]" "pingLinuxIp PC-B $PC_A_ip"
       checkPing "[PC-B]->[S1]" "pingLinuxIp PC-B $S1_ip0"
-      echo "Success"
+      echo "Тест пройден успешно!"
       
