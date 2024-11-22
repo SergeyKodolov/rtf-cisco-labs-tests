@@ -297,6 +297,8 @@ ospf_check:
       fi
 
       deleteOSPFCost R1 e0/1 $R1_e01_cost
+      echo "Ждем 10 сек..."
+      sleep 10
 
       echo "[R1 e0/2] -> [R2 e0/2] Проверяем трассировку..."
       trace_result=$(traceroute R1 $R1_e02 $R2_e02)
@@ -337,6 +339,8 @@ ospf_check:
       fi
 
       setOSPFCost R1 e0/0 $R1_e01_cost
+      echo "Ждем 10 сек..."
+      sleep 10
 
       echo "[R1 e0/2] -> [R2 e0/2] Проверяем трассировку..."
       trace_result=$(traceroute R1 $R1_e02 $R2_e02)

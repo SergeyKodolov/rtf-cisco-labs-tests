@@ -55,8 +55,6 @@ include:
     - !reference [ .execute_telnet ]
     - |
       echo "[$node] $eth стоимость $cost"
-      echo "Ждем 10 сек..."
-      sleep 10
       }
 
   delete:
@@ -76,8 +74,6 @@ include:
     - !reference [ .execute_telnet ]
     - |
       echo "[$node] $eth стоимость удалена"
-      echo "Ждем 10 сек..."
-      sleep 10
       }
 
   get:
