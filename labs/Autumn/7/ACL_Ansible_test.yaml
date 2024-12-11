@@ -2,6 +2,7 @@ include:
   - '/opt/unetlab/libs/.all_node_active.yaml'
   - '/opt/unetlab/libs/.scripts_telnet_port.yaml'
   - '/opt/unetlab/libs/.scripts_ping_ip.yaml'
+  - '/opt/unetlab/libs/.scripts_get_ip.yaml'
 
 all_node_active:
   extends: .all_node_active
