@@ -14,6 +14,7 @@ standard_filter:
   title: "Проверка плейбука standard_filter.yaml"
   description: "Только PC-B не имеет доступа по VTY на R1 R2"
   before_script:
+    - !reference [ .scripts_get_ip all ]
     - !reference [ .scripts_telnet_port linux ]
     - |
       function checkPortOpen(){
@@ -30,27 +31,27 @@ standard_filter:
         [[ $($command) != 0 ]] && { echo "$title: ERROR"; exit 1; } || echo "$title: OK"
       }
   script:
-    - R1_ip=10.0.0.1
-    - R2_ip=10.0.0.2
+    - R1_e01=$(getRouterIp R1 eth0/1)
+    - R2_e01=$(getRouterIp R2 eth0/1)
     - |
       TELNET_TIMEOUT=7
-      checkPortOpen "[PC-C]->[telnet R1]" "telnetLinuxPort PC-C ${R1_ip}:23"
-      checkPortOpen "[PC-C]->[ssh R1]" "telnetLinuxPort PC-C ${R1_ip}:22"
+      checkPortOpen "[PC-C]->[telnet R1]" "telnetLinuxPort PC-C ${R1_e01}:23"
+      checkPortOpen "[PC-C]->[ssh R1]" "telnetLinuxPort PC-C ${R1_e01}:22"
 
-      checkPortOpen "[PC-A]->[telnet R1]" "telnetLinuxPort PC-A ${R1_ip}:23"
-      checkPortOpen "[PC-A]->[ssh R1]" "telnetLinuxPort PC-A ${R1_ip}:22"
+      checkPortOpen "[PC-A]->[telnet R1]" "telnetLinuxPort PC-A ${R1_e01}:23"
+      checkPortOpen "[PC-A]->[ssh R1]" "telnetLinuxPort PC-A ${R1_e01}:22"
 
-      checkPortClose "[PC-B]->[telnet R1]" "telnetLinuxPort PC-B ${R1_ip}:23"
-      checkPortClose "[PC-B]->[ssh R1]" "telnetLinuxPort PC-B ${R1_ip}:22"
+      checkPortClose "[PC-B]->[telnet R1]" "telnetLinuxPort PC-B ${R1_e01}:23"
+      checkPortClose "[PC-B]->[ssh R1]" "telnetLinuxPort PC-B ${R1_e01}:22"
 
-      checkPortOpen "[PC-C]->[telnet R2]" "telnetLinuxPort PC-C ${R2_ip}:23"
-      checkPortOpen "[PC-C]->[ssh R2]" "telnetLinuxPort PC-C ${R2_ip}:22"
+      checkPortOpen "[PC-C]->[telnet R2]" "telnetLinuxPort PC-C ${R2_e01}:23"
+      checkPortOpen "[PC-C]->[ssh R2]" "telnetLinuxPort PC-C ${R2_e01}:22"
 
-      checkPortOpen "[PC-A]->[telnet R2]" "telnetLinuxPort PC-A ${R2_ip}:23"
-      checkPortOpen "[PC-A]->[ssh R2]" "telnetLinuxPort PC-A ${R2_ip}:22"
+      checkPortOpen "[PC-A]->[telnet R2]" "telnetLinuxPort PC-A ${R2_e01}:23"
+      checkPortOpen "[PC-A]->[ssh R2]" "telnetLinuxPort PC-A ${R2_e01}:22"
 
-      checkPortClose "[PC-B]->[telnet R2]" "telnetLinuxPort PC-B ${R2_ip}:23"
-      checkPortClose "[PC-B]->[ssh R2]" "telnetLinuxPort PC-B ${R2_ip}:22"
+      checkPortClose "[PC-B]->[telnet R2]" "telnetLinuxPort PC-B ${R2_e01}:23"
+      checkPortClose "[PC-B]->[ssh R2]" "telnetLinuxPort PC-B ${R2_e01}:22"
       
       echo "Тест пройден успешно!"
 
@@ -59,6 +60,7 @@ req1:
   title: "Проверка требования №1"
   description: "Доступ к R1 по telnet только с PC-A"
   before_script:
+    - !reference [ .scripts_get_ip all ]
     - !reference [ .scripts_telnet_port linux ]
     - |
       function checkPortOpen(){
@@ -75,13 +77,13 @@ req1:
         [[ $($command) != 0 ]] && { echo "$title: ERROR"; exit 1; } || echo "$title: OK"
       }
   script:
-    - R1_ip=10.0.0.1
-    - R2_ip=10.0.0.2
+    - R1_e01=$(getRouterIp R1 eth0/1)
+    - R2_e01=$(getRouterIp R2 eth0/1)
     - |
       TELNET_TIMEOUT=7
-      checkPortOpen "[PC-A]->[telnet R1]" "telnetLinuxPort PC-A ${R1_ip}:23"
-      checkPortClose "[PC-B]->[telnet R1]" "telnetLinuxPort PC-B ${R1_ip}:23"
-      checkPortClose "[PC-C]->[telnet R1]" "telnetLinuxPort PC-C ${R1_ip}:23"
+      checkPortOpen "[PC-A]->[telnet R1]" "telnetLinuxPort PC-A ${R1_e01}:23"
+      checkPortClose "[PC-B]->[telnet R1]" "telnetLinuxPort PC-B ${R1_e01}:23"
+      checkPortClose "[PC-C]->[telnet R1]" "telnetLinuxPort PC-C ${R1_e01}:23"
       
       echo "Тест пройден успешно!"
 
@@ -90,6 +92,7 @@ req2:
   title: "Проверка требования №2"
   description: "PC-B пингует PC-A, все пингуют PC-B"
   before_script:
+    - !reference [ .scripts_get_ip all ]
     - !reference [ .scripts_ping_ip all ]
     - |
       function checkPing(){
@@ -106,17 +109,17 @@ req2:
         [[ $($command) != 0 ]] && { echo "$title: ERROR"; exit 1; } || echo "$title: OK"
       }
   script:
-    - PC_A_ip=192.168.10.10
-    - PC_B_ip=192.168.20.20
-    - PC_C_ip=192.168.30.30
-    - R1_ip=10.0.0.1
-    - R2_ip=10.0.0.2
+    - PC_A_ip=$(getLinuxIp PC-A eth1)
+    - PC_B_ip=$(getLinuxIp PC-B eth1)
+    - PC_C_ip=$(getLinuxIp PC-C eth1)
+    - R1_e01=$(getRouterIp R1 eth0/1)
+    - R2_e01=$(getRouterIp R2 eth0/1)
     - |
       TELNET_TIMEOUT=7
       checkPing "[PC-B]->[PC-A]" "pingLinuxIp PC-B $PC_A_ip"
       checkNotPing "[PC-B]->[PC-C]" "pingLinuxIp PC-B $PC_C_ip"
-      # checkNotPing "[PC-B]->[R1]" "pingLinuxIp PC-B $R1_ip"
-      # checkNotPing "[PC-B]->[R2]" "pingLinuxIp PC-B $R2_ip"
+      # checkNotPing "[PC-B]->[R1]" "pingLinuxIp PC-B $R1_e01"
+      # checkNotPing "[PC-B]->[R2]" "pingLinuxIp PC-B $R2_e01"
 
       checkPing "[PC-A]->[PC-B]" "pingLinuxIp PC-A $PC_B_ip"
       checkPing "[PC-C]->[PC-B]" "pingLinuxIp PC-C $PC_B_ip"
@@ -130,6 +133,7 @@ req3:
   title: "Проверка требования №3"
   description: "Доступ по http PC-A только с PC-B"
   before_script:
+    - !reference [ .scripts_get_ip all ]
     - !reference [ .scripts_telnet_port linux ]
     - |
       function checkPortOpen(){
@@ -146,11 +150,11 @@ req3:
         [[ $($command) != 0 ]] && { echo "$title: ERROR"; exit 1; } || echo "$title: OK"
       }
   script:
-    - PC_A_ip=192.168.10.10
-    - PC_B_ip=192.168.20.20
-    - PC_C_ip=192.168.30.30
-    - R1_ip=10.0.0.1
-    - R2_ip=10.0.0.2
+    - PC_A_ip=$(getLinuxIp PC-A eth1)
+    - PC_B_ip=$(getLinuxIp PC-B eth1)
+    - PC_C_ip=$(getLinuxIp PC-C eth1)
+    - R1_e01=$(getRouterIp R1 eth0/1)
+    - R2_e01=$(getRouterIp R2 eth0/1)
     - |
       TELNET_TIMEOUT=7
       checkPortOpen "[PC-B]->[www PC-A]" "telnetLinuxPort PC-B ${PC_A_ip}:80"
