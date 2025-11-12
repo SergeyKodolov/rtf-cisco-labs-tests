@@ -165,6 +165,15 @@ hsrp_check:
     - |
       TELNET_TIMEOUT=10
 
+      echo "Восстанавливаем интерфейсы (для рестартов)"
+      enableInterface R2 e0/0
+      enableInterface R1 e0/1
+      enableInterface R2 e0/1
+      enableInterface R3 e0/1
+      echo "Ждем 10 секунд.."
+      sleep 10
+      echo "Ок, продолжаем.."
+
       disableInterface R2 e0/0
       disableInterface R1 e0/1
 
